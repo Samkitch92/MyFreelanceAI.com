@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyFreelanceAI — Sign up</title>
+<style>
+  :root{
+    --charcoal:#2A2520;
+    --mint:#2ABFA3;
+    --orange:#FF8C42;
+    --orange-soft:#FFE8D6;
+    --off-white:#FDFBF8;
+    --ink:#2A2520;
+    --ink-soft:#7A7168;
+    --card:#FFFFFF;
+    --line:#EFE7DD;
+    --red:#E05A4E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(160deg,#2A2520 0%,#3D3530 50%,#4A3F38 100%);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ===== NAV ===== */
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 40px;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-weight:800;font-size:18px;color:#fff;
+    text-decoration:none;letter-spacing:-0.3px;
+  }
+  .leaf{width:26px;height:26px;flex:0 0 26px;}
+  .nav-switch{font-size:14px;color:rgba(255,255,255,0.5);}
+  .nav-switch a{color:var(--mint);font-weight:700;text-decoration:none;}
+  .nav-switch a:hover{text-decoration:underline;}
+
+  /* ===== MAIN LAYOUT ===== */
+  .main{
+    flex:1;display:flex;align-items:center;justify-content:center;
+    padding:20px 20px 48px;gap:60px;
+  }
+
+  /* ===== LEFT PANEL — value prop ===== */
+  .left-panel{
+    max-width:380px;flex:0 0 380px;
+  }
+  .left-panel h1{
+    font-size:36px;font-weight:800;color:#fff;
+    letter-spacing:-0.8px;line-height:1.15;margin-bottom:16px;
+  }
+  .left-panel h1 em{font-style:normal;color:var(--mint);}
+  .left-panel p{
+    font-size:16px;color:rgba(255,255,255,0.5);
+    line-height:1.65;margin-bottom:32px;
+  }
+  .perks{display:flex;flex-direction:column;gap:14px;}
+  .perk{display:flex;align-items:flex-start;gap:12px;}
+  .perk-ic{
+    width:30px;height:30px;border-radius:8px;flex:0 0 30px;
+    background:rgba(42,191,163,0.15);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .perk-ic svg{width:14px;height:14px;stroke:var(--mint);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+  .perk-body .t{font-size:14px;font-weight:700;color:#fff;}
+  .perk-body .s{font-size:13px;color:rgba(255,255,255,0.4);margin-top:2px;}
+
+  /* mini stats strip */
+  .mini-stats{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+    margin-top:36px;
+  }
+  .mini-stat{
+    background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+    border-radius:14px;padding:14px;
+  }
+  .mini-stat .k{font-size:11px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.5px;}
+  .mini-stat .v{font-size:20px;font-weight:800;color:#fff;margin-top:4px;letter-spacing:-0.4px;}
+  .mini-stat .v.mint{color:var(--mint);}
+  .mini-stat .v.orange{color:var(--orange);}
+
+  /* ===== RIGHT PANEL — form card ===== */
+  .form-card{
+    background:var(--card);border-radius:24px;
+    padding:40px;width:100%;max-width:440px;
+    box-shadow:0 24px 64px rgba(0,0,0,0.3);
+  }
+
+  /* tab switcher */
+  .tabs{
+    display:flex;background:var(--off-white);border-radius:16px;padding:4px;
+    margin-bottom:28px;
+  }
+  .tab{
+    flex:1;text-align:center;padding:10px;border-radius:12px;
+    font-size:14px;font-weight:700;color:var(--ink-soft);cursor:pointer;
+    text-decoration:none;
+  }
+  .tab.active{background:var(--charcoal);color:#fff;}
+
+  /* form heading */
+  .form-heading{margin-bottom:24px;}
+  .form-heading h2{font-size:22px;font-weight:800;letter-spacing:-0.3px;margin-bottom:6px;}
+  .form-heading p{font-size:14px;color:var(--ink-soft);}
+
+  /* form elements */
+  .form-row{margin-bottom:16px;}
+  .form-row label{
+    display:block;font-size:12px;font-weight:700;color:var(--ink-soft);
+    text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;
+  }
+  .form-row input{
+    width:100%;border:1px solid var(--line);border-radius:12px;
+    padding:13px 16px;font-size:15px;background:var(--off-white);
+    color:var(--ink);outline:none;font-family:inherit;
+    transition:border-color 0.15s;
+  }
+  .form-row input:focus{border-color:var(--mint);}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+  /* password strength */
+  .strength-bar{display:flex;gap:4px;margin-top:8px;}
+  .strength-seg{height:4px;flex:1;border-radius:99px;background:var(--line);}
+  .strength-seg.filled.weak{background:var(--red);}
+  .strength-seg.filled.ok{background:var(--orange);}
+  .strength-seg.filled.strong{background:var(--mint);}
+  .strength-label{font-size:11px;font-weight:700;color:var(--ink-soft);margin-top:5px;}
+
+  /* submit button */
+  .submit-btn{
+    width:100%;padding:15px;border-radius:24px;border:none;cursor:pointer;
+    background:var(--charcoal);color:#fff;
+    font-size:16px;font-weight:800;font-family:inherit;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin-top:8px;transition:background 0.15s;
+  }
+  .submit-btn:hover{background:#3D3530;}
+  .submit-btn svg{width:16px;height:16px;stroke:var(--mint);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* divider */
+  .or-divider{
+    display:flex;align-items:center;gap:12px;
+    margin:20px 0;font-size:12px;font-weight:700;color:var(--ink-soft);
+  }
+  .or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--line);}
+
+  /* google button */
+  .google-btn{
+    width:100%;padding:13px;border-radius:24px;
+    border:1px solid var(--line);background:#fff;
+    font-size:14px;font-weight:700;color:var(--ink);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    font-family:inherit;transition:background 0.15s;
+  }
+  .google-btn:hover{background:var(--off-white);}
+  .google-btn svg{width:18px;height:18px;}
+
+  /* terms */
+  .terms{font-size:12px;color:var(--ink-soft);text-align:center;margin-top:20px;line-height:1.6;}
+  .terms a{color:var(--ink-soft);font-weight:700;text-decoration:underline;}
+
+  /* trial badge */
+  .trial-badge{
+    display:flex;align-items:center;gap:10px;
+    background:linear-gradient(135deg,#E7F7F3,#F0FAF8);
+    border:1px solid rgba(42,191,163,0.3);border-radius:14px;
+    padding:12px 16px;margin-bottom:24px;
+  }
+  .trial-badge svg{width:18px;height:18px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 18px;}
+  .trial-badge p{font-size:13px;font-weight:700;color:#1B8A76;}
+  .trial-badge p span{font-weight:400;color:#2A7A6A;}
+
+  /* forgot password link */
+  .forgot{
+    display:block;text-align:right;font-size:12px;font-weight:700;
+    color:var(--orange);text-decoration:none;margin-top:-8px;margin-bottom:16px;
+  }
+
+  /* ===== FOOTER ===== */
+  .foot{
+    text-align:center;padding:20px;
+    font-size:12px;color:rgba(255,255,255,0.25);
+  }
+  .foot a{color:rgba(255,255,255,0.35);text-decoration:none;}
+
+  /* ===== LOGIN STATE (hidden by default, shown via JS) ===== */
+  .signup-view{}
+  .login-view{display:none;}
+  body.login-mode .signup-view{display:none;}
+  body.login-mode .login-view{display:block;}
+
+  /* ===== RESPONSIVE ===== */
+  .mobile-brand-block{display:none;}
+  @media(max-width:860px){
+    .main{flex-direction:column;gap:16px;padding:0 16px 48px;}
+    .left-panel{display:none;}
+    .mini-stats{display:none;}
+    .nav{padding:16px 20px;}
+    .nav-switch{display:none;}
+    .brand{font-size:16px;}
+    .form-card{padding:28px 20px;}
+    .mobile-brand-block{
+      display:flex;flex-direction:column;align-items:center;text-align:center;
+      padding:24px 20px 8px;
+    }
+    .mobile-brand-block .mob-logo{display:flex;align-items:center;gap:10px;}
+    .mobile-brand-block .mob-logo span{font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.3px;}
+    .mobile-brand-block p{font-size:14px;color:rgba(255,255,255,0.5);margin-top:8px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="brand" href="myfreelanceai-landing.html">
+    <svg class="leaf" viewBox="0 0 24 24" fill="none">
+      <path d="M20 4C12 4 5 8 5 16c0 2 .6 3.4 1.5 4.5C8 14 13 9 19 7c-5 3-9 8-10.5 13.5C9.6 21 10.8 21 12 21c8 0 8-11 8-17z" fill="#2ABFA3"/>
+    </svg>
+    MyFreelanceAI
+  </a>
+  <div class="nav-switch signup-view">Already have an account? <a href="#" onclick="showLogin();return false;">Sign in</a></div>
+  <div class="nav-switch login-view">Don't have an account? <a href="#" onclick="showSignup();return false;">Sign up free</a></div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT: VALUE PROP -->
+  <div class="left-panel">
+    <h1>Your freelance<br>business,<br><em>on autopilot.</em></h1>
+    <p>Join thousands of freelancers who've taken back their time with MyFreelanceAI.</p>
+    <div class="perks">
+      <div class="perk">
+        <div class="perk-ic"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <div class="perk-body">
+          <div class="t">30 days free, no card needed</div>
+          <div class="s">Full Pro access, cancel any time</div>
+        </div>
+      </div>
+      <div class="perk">
+        <div class="perk-ic"><svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3L22 9.3l-5 4.9 1.2 6.8L12 17.8l-6.2 3.2L7 14.2 2 9.3l6.9-1z"/></svg></div>
+        <div class="perk-body">
+          <div class="t">Everyday admin, AI speed</div>
+          <div class="s">Chases invoices, drafts emails, tracks tax</div>
+        </div>
+      </div>
+      <div class="perk">
+        <div class="perk-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="perk-body">
+          <div class="t">Up and running in 5 minutes</div>
+          <div class="s">No accountant or tech skills needed</div>
+        </div>
+      </div>
+      <div class="perk">
+        <div class="perk-ic"><svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg></div>
+        <div class="perk-body">
+          <div class="t">Professional invoices instantly</div>
+          <div class="s">Your logo, your brand, sent in seconds</div>
+        </div>
+      </div>
+    </div>
+    <div class="mini-stats">
+      <div class="mini-stat">
+        <div class="k">Avg. time saved</div>
+        <div class="v mint">4 hrs/mo</div>
+      </div>
+      <div class="mini-stat">
+        <div class="k">Faster payment</div>
+        <div class="v orange">3 days</div>
+      </div>
+      <div class="mini-stat">
+        <div class="k">Free trial</div>
+        <div class="v">30 days</div>
+      </div>
+      <div class="mini-stat">
+        <div class="k">Setup time</div>
+        <div class="v">5 mins</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE BRAND BLOCK (only shown on small screens) -->
+  <div class="mobile-brand-block">
+    <div class="mob-logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <path d="M20 4C12 4 5 8 5 16c0 2 .6 3.4 1.5 4.5C8 14 13 9 19 7c-5 3-9 8-10.5 13.5C9.6 21 10.8 21 12 21c8 0 8-11 8-17z" fill="#2ABFA3"/>
+      </svg>
+      <span>MyFreelanceAI</span>
+    </div>
+    <p>Your AI business assistant — free for 30 days</p>
+  </div>
+
+  <!-- RIGHT: FORM CARD -->
+  <div class="form-card">
+
+    <!-- Tab switcher -->
+    <div class="tabs">
+      <a class="tab active signup-view" href="#" onclick="showSignup();return false;">Create account</a>
+      <a class="tab login-view" href="#" onclick="showSignup();return false;">Create account</a>
+      <a class="tab signup-view" href="#" onclick="showLogin();return false;">Sign in</a>
+      <a class="tab active login-view" href="#" onclick="showLogin();return false;">Sign in</a>
+    </div>
+
+    <!-- SIGN UP VIEW -->
+    <div class="signup-view">
+      <div class="trial-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3L22 9.3l-5 4.9 1.2 6.8L12 17.8l-6.2 3.2L7 14.2 2 9.3l6.9-1z"/></svg>
+        <p>30-day free trial — full Pro access. <span>No credit card required.</span></p>
+      </div>
+
+      <div class="form-heading">
+        <h2>Create your account</h2>
+        <p>Takes under 2 minutes to get set up.</p>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-row">
+          <label>First name</label>
+          <input type="text" placeholder="Sam">
+        </div>
+        <div class="form-row">
+          <label>Last name</label>
+          <input type="text" placeholder="Mitchell">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Email address</label>
+        <input type="email" placeholder="sam@yourbusiness.com">
+      </div>
+
+      <div class="form-row">
+        <label>Password</label>
+        <input type="password" placeholder="Min. 8 characters" id="pwInput" oninput="updateStrength(this.value)">
+        <div class="strength-bar">
+          <div class="strength-seg" id="s1"></div>
+          <div class="strength-seg" id="s2"></div>
+          <div class="strength-seg" id="s3"></div>
+          <div class="strength-seg" id="s4"></div>
+        </div>
+        <div class="strength-label" id="strengthLabel"></div>
+      </div>
+
+      <button class="submit-btn">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Start free trial
+      </button>
+
+      <div class="or-divider">or</div>
+
+      <button class="google-btn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <p class="terms">By signing up you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+    </div>
+
+    <!-- LOGIN VIEW -->
+    <div class="login-view">
+      <div class="form-heading">
+        <h2>Welcome back</h2>
+        <p>Sign in to your MyFreelanceAI account.</p>
+      </div>
+
+      <div class="form-row">
+        <label>Email address</label>
+        <input type="email" placeholder="sam@yourbusiness.com">
+      </div>
+
+      <div class="form-row">
+        <label>Password</label>
+        <input type="password" placeholder="Your password">
+      </div>
+
+      <a class="forgot" href="#">Forgot password?</a>
+
+      <button class="submit-btn">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Sign in
+      </button>
+
+      <div class="or-divider">or</div>
+
+      <button class="google-btn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <p class="terms">Having trouble? <a href="#">Contact support</a></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="foot">
+  <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a> · <a href="#">Contact</a>
+</div>
+
+<script>
+  function showLogin(){
+    document.body.classList.add('login-mode');
+  }
+  function showSignup(){
+    document.body.classList.remove('login-mode');
+  }
+  function updateStrength(val){
+    const segs = [document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('s4')];
+    const label = document.getElementById('strengthLabel');
+    let score = 0;
+    if(val.length >= 8) score++;
+    if(val.length >= 12) score++;
+    if(/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+    if(/[^A-Za-z0-9]/.test(val)) score++;
+    const classes = ['weak','ok','ok','strong'];
+    const labels = ['','Weak','Fair','Strong','Very strong'];
+    segs.forEach((s,i)=>{
+      s.className = 'strength-seg';
+      if(i < score) s.classList.add('filled', classes[score-1]);
+    });
+    label.textContent = val.length > 0 ? labels[score] : '';
+  }
+</script>
+
+</body>
+</html>

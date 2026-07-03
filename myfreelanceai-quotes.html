@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyFreelanceAI — Quotes</title>
+<style>
+  :root{
+    --charcoal:#2A2520;
+    --mint:#2ABFA3;
+    --orange:#FF8C42;
+    --orange-soft:#FFE8D6;
+    --off-white:#FDFBF8;
+    --ink:#2A2520;
+    --ink-soft:#7A7168;
+    --card:#FFFFFF;
+    --line:#EFE7DD;
+    --red:#E05A4E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(180deg,#FFE3CC 0%,#FFF1E3 30%,var(--off-white) 70%);
+    background-attachment:fixed;
+    color:var(--ink);
+    min-height:100vh;
+    padding-bottom:90px;
+  }
+
+  /* ===== TOP NAV ===== */
+  .topnav{
+    display:flex;align-items:center;gap:28px;
+    padding:16px 32px;
+    background:rgba(255,255,255,0.72);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:50;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-0.3px;}
+  .leaf{width:26px;height:26px;flex:0 0 26px;}
+  .navlinks{display:flex;gap:6px;margin-left:12px;align-items:center;}
+  .navlinks a{
+    text-decoration:none;color:var(--ink-soft);font-size:14px;font-weight:600;
+    padding:8px 14px;border-radius:20px;
+  }
+  .navlinks a.active{background:var(--charcoal);color:#fff;}
+
+  /* Docs dropdown */
+  .nav-dropdown{position:relative;}
+  .nav-dropdown > .nav-trigger{
+    display:flex;align-items:center;gap:5px;
+    text-decoration:none;color:#fff;font-size:14px;font-weight:600;
+    padding:8px 14px;border-radius:20px;
+    background:var(--charcoal);cursor:pointer;user-select:none;
+  }
+  .nav-trigger svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;}
+  .dropdown-menu{
+    position:absolute;top:calc(100% + 8px);left:0;
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.08);
+    min-width:140px;overflow:hidden;
+    display:block;
+  }
+  .dropdown-menu a{
+    display:block;padding:12px 16px;font-size:14px;font-weight:600;
+    text-decoration:none;color:var(--ink);
+  }
+  .dropdown-menu a:hover{background:var(--off-white);}
+  .dropdown-menu a.sub-active{color:var(--mint);}
+  .dropdown-menu .divider{height:1px;background:var(--line);}
+
+  .nav-spacer{flex:1;}
+  .avatar{
+    width:38px;height:38px;border-radius:50%;
+    background:var(--mint);color:#fff;font-weight:700;font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ===== PAGE ===== */
+  .page{max-width:1080px;margin:0 auto;padding:28px 20px;}
+
+  /* ===== PAGE HEADER ===== */
+  .page-header{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .page-header h1{font-size:26px;font-weight:800;letter-spacing:-0.4px;flex:1;}
+
+  /* ===== BUTTONS ===== */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--charcoal);color:#fff;border:none;cursor:pointer;
+    font-size:14px;font-weight:600;padding:11px 18px;border-radius:24px;
+  }
+  .btn svg{width:16px;height:16px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ===== STAT STRIP ===== */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;}
+  .stat .label{font-size:12px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.5px;}
+  .stat .value{font-size:22px;font-weight:800;margin-top:6px;letter-spacing:-0.4px;}
+  .stat .value.mint{color:var(--mint);}
+  .stat .value.orange{color:var(--orange);}
+  .stat .value.red{color:var(--red);}
+  .stat .sub{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+
+  /* ===== AI SLIM BAR ===== */
+  .ai-bar{
+    background:#fff;border:2px solid var(--orange);border-radius:16px;
+    padding:12px 16px;margin-bottom:22px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#E7F7F3;color:#1B8A76;font-size:11px;font-weight:700;
+    padding:4px 10px;border-radius:20px;white-space:nowrap;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--mint);animation:pulse 1.6s infinite;flex:0 0 8px;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(42,191,163,0.5);}70%{box-shadow:0 0 0 8px rgba(42,191,163,0);}100%{box-shadow:0 0 0 0 rgba(42,191,163,0);}}
+  .ai-bar-label{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+  .ai-bar-label span.txt{font-size:13px;font-weight:800;white-space:nowrap;}
+  .ai-bar-divider{width:1px;height:28px;background:var(--line);flex:0 0 1px;}
+  .chips-inline{display:flex;gap:6px;flex-wrap:nowrap;overflow:hidden;}
+  .chip{
+    font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap;
+    background:var(--off-white);border:1px solid var(--line);
+    padding:5px 10px;border-radius:20px;cursor:pointer;
+  }
+  .ai-bar input{
+    flex:1;border:none;outline:none;font-size:14px;
+    background:transparent;color:var(--ink);min-width:0;
+  }
+  .ai-bar input::placeholder{color:var(--ink-soft);}
+  .send{
+    width:44px;height:44px;border-radius:50%;flex:0 0 44px;
+    background:var(--charcoal);border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .send svg{width:18px;height:18px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    margin-bottom:16px;
+  }
+  .filter-tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:4px;}
+  .filter-tabs button{
+    border:none;background:none;cursor:pointer;
+    font-size:13px;font-weight:600;color:var(--ink-soft);
+    padding:7px 14px;border-radius:20px;
+  }
+  .filter-tabs button.active{background:var(--charcoal);color:#fff;}
+  .filter-spacer{flex:1;}
+  .search-box{
+    display:flex;align-items:center;gap:8px;
+    background:var(--card);border:1px solid var(--line);border-radius:24px;
+    padding:9px 14px;
+  }
+  .search-box svg{width:15px;height:15px;stroke:var(--ink-soft);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 15px;}
+  .search-box input{border:none;outline:none;font-size:13px;background:transparent;width:180px;}
+  select.filter-select{
+    border:1px solid var(--line);background:var(--card);border-radius:24px;
+    padding:9px 14px;font-size:13px;font-weight:600;color:var(--ink);
+    outline:none;cursor:pointer;
+  }
+
+  /* ===== QUOTES TABLE ===== */
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:20px;
+  }
+  .panel h2{
+    font-size:15px;font-weight:800;letter-spacing:-0.2px;
+    padding-bottom:12px;margin-bottom:0;
+    border-bottom:1px solid var(--line);
+  }
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{
+    text-align:left;font-size:11px;font-weight:700;color:var(--ink-soft);
+    text-transform:uppercase;letter-spacing:0.5px;padding:12px 10px;
+  }
+  td{padding:14px 10px;border-top:1px solid var(--line);vertical-align:middle;}
+  tr:hover td{background:#FAFAF8;}
+  .amount{font-weight:700;text-align:right;}
+  th.amount{text-align:right;}
+  .muted{color:var(--ink-soft);}
+  .fw{font-weight:700;}
+
+  /* status pills */
+  .pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;display:inline-block;}
+  .pill.accepted{background:#E7F7F3;color:#1B8A76;}
+  .pill.pending{background:#FFF0E2;color:#C25E12;}
+  .pill.declined{background:#FCE9E7;color:#B23A30;}
+  .pill.draft{background:#F0EEF8;color:#5B4DB8;}
+  .pill.expired{background:#F2F2F2;color:#888;}
+
+  /* row actions */
+  .row-actions{display:flex;gap:6px;justify-content:flex-end;}
+  .row-btn{
+    font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;
+    border:1px solid var(--line);background:none;cursor:pointer;color:var(--ink);
+  }
+  .row-btn.primary{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+
+  /* expiry warning */
+  .expiry{font-size:11px;font-weight:600;}
+  .expiry.warn{color:var(--red);}
+  .expiry.ok{color:var(--ink-soft);}
+
+  /* ===== EMPTY STATE ===== */
+  .empty{text-align:center;padding:48px 20px;}
+  .empty p{color:var(--ink-soft);font-size:14px;margin-top:8px;}
+
+  /* ===== BOTTOM NAV (mobile) ===== */
+  .bottomnav{
+    display:none;
+    position:fixed;bottom:0;left:0;right:0;z-index:50;
+    background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    justify-content:space-around;
+  }
+  .bn-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    text-decoration:none;color:var(--ink-soft);font-size:10px;font-weight:700;
+    padding:4px 10px;border-radius:12px;
+  }
+  .bn-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .bn-item.active{color:var(--charcoal);}
+  .bn-item.active svg{stroke:var(--mint);}
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width:860px){
+    .topnav .navlinks{display:none;}
+    .bottomnav{display:flex;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .page{padding:20px 16px;}
+    .chips-inline{display:none;}
+    .search-box input{width:120px;}
+    th.hide-mob,td.hide-mob{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="brand">
+    <svg class="leaf" viewBox="0 0 24 24" fill="none">
+      <path d="M20 4C12 4 5 8 5 16c0 2 .6 3.4 1.5 4.5C8 14 13 9 19 7c-5 3-9 8-10.5 13.5C9.6 21 10.8 21 12 21c8 0 8-11 8-17z" fill="#2ABFA3"/>
+    </svg>
+    MyFreelanceAI
+  </div>
+  <div class="navlinks">
+    <a href="#">Dashboard</a>
+    <a href="#">Work log</a>
+    <a href="#">Clients</a>
+    <div class="nav-dropdown">
+      <div class="nav-trigger">
+        Docs
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="dropdown-menu">
+        <a href="#" class="sub-active">Quotes</a>
+        <div class="divider"></div>
+        <a href="#">Invoices</a>
+      </div>
+    </div>
+    <a href="#">Accounts</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <div class="avatar">SM</div>
+</nav>
+
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>Quotes</h1>
+    <button class="btn">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      New quote
+    </button>
+  </div>
+
+  <!-- STAT STRIP -->
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Total quoted</div>
+      <div class="value">£24,800</div>
+      <div class="sub">this tax year</div>
+    </div>
+    <div class="stat">
+      <div class="label">Accepted</div>
+      <div class="value mint">£18,350</div>
+      <div class="sub">74% conversion rate</div>
+    </div>
+    <div class="stat">
+      <div class="label">Pending</div>
+      <div class="value orange">£4,200</div>
+      <div class="sub">3 awaiting response</div>
+    </div>
+    <div class="stat">
+      <div class="label">Declined</div>
+      <div class="value red">£2,250</div>
+      <div class="sub">2 this year</div>
+    </div>
+  </div>
+
+  <!-- AI SLIM BAR -->
+  <div class="ai-bar">
+    <div class="ai-bar-label">
+      <span class="badge"><span class="dot"></span>AI</span>
+      <span class="txt">Ask about your quotes</span>
+    </div>
+    <div class="ai-bar-divider"></div>
+    <div class="chips-inline">
+      <div class="chip">Chase pending quotes</div>
+      <div class="chip">Which quotes are expiring soon?</div>
+      <div class="chip">Draft a new quote</div>
+    </div>
+    <input type="text" placeholder="Or type your own question…">
+    <button class="send" aria-label="Send">
+      <svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+    </button>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-tabs">
+      <button class="active">All</button>
+      <button>Pending</button>
+      <button>Accepted</button>
+      <button>Declined</button>
+      <button>Draft</button>
+    </div>
+    <div class="filter-spacer"></div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search quotes…">
+    </div>
+    <select class="filter-select">
+      <option>All clients</option>
+      <option>Bright Path Marketing</option>
+      <option>Nova Studio</option>
+      <option>Thornfield Legal</option>
+    </select>
+  </div>
+
+  <!-- QUOTES TABLE -->
+  <div class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>Quote</th>
+          <th class="hide-mob">Client</th>
+          <th class="hide-mob">Sent</th>
+          <th>Status</th>
+          <th class="hide-mob">Expires</th>
+          <th class="amount">Value</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Pending -->
+        <tr>
+          <td>
+            <div class="fw">QUO-0031</div>
+            <div class="muted">Brand refresh package</div>
+          </td>
+          <td class="hide-mob">Bright Path Marketing</td>
+          <td class="muted hide-mob">24 Jun 2026</td>
+          <td><span class="pill pending">Pending</span></td>
+          <td class="hide-mob"><span class="expiry warn">Expires in 3 days</span></td>
+          <td class="amount">£2,400</td>
+          <td>
+            <div class="row-actions">
+              <button class="row-btn">View</button>
+              <button class="row-btn primary">Chase</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="fw">QUO-0030</div>
+            <div class="muted">Social media management</div>
+          </td>
+          <td class="hide-mob">Nova Studio</td>
+          <td class="muted hide-mob">20 Jun 2026</td>
+          <td><span class="pill pending">Pending</span></td>
+          <td class="hide-mob"><span class="expiry warn">Expires in 7 days</span></td>
+          <td class="amount">£1,200</td>
+          <td>
+            <div class="row-actions">
+              <button class="row-btn">View</button>
+              <button class="row-btn primary">Chase</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="fw">QUO-0029</div>
+            <div class="muted">Quarterly content retainer</div>
+          </td>
+          <td class="hide-mob">Thornfield Legal</td>
+          <td class="muted hide-mob">15 Jun 2026</td>
+          <td><span class="pill pending">Pending</span></td>
+          <td class="hide-mob"><span class="expiry ok">Expires in 12 days</span></td>
+          <td class="amount">£600</td>
+          <td>
+            <div class="row-actions">
+              <button class="row-btn">View</button>
+              <button class="row-btn primary">Chase</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Draft -->
+        <tr>
+          <td>
+            <div class="fw">QUO-0032</div>
+            <div class="muted">Website copy overhaul</div>
+          </td>
+          <td class="hide-mob">Bright Path Marketing</td>
+          <td class="muted hide-mob">—</td>
+          <td><span class="pill draft">Draft</span></td>
+          <td class="hide-mob"><span class="expiry ok">Not sent yet</span></td>
+          <td class="amount">£1,800</td>
+          <td>
+            <div class="row-actions">
+              <button class="row-btn">Edit</button>
+              <button class="row-btn primary">Send</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Accepted -->
+        <tr>
+          <td>
+            <div class="fw">QUO-0028</div>
+            <div class="muted">Email campaign — Q3</div>
+          </td>
+          <td class="hide-mob">Bright Path Marketing</td>
+          <td class="muted hide-mob">2 Jun 2026</td>
+          <td><span class="pill accepted">Accepted</span></td>
+          <td class="hide-mob"><span class="expiry ok">Signed 8 Jun</span></td>
+          <td class="amount">£3,200</td>
+          <td>
+            <div class="row-actions">
+              <button class="row-btn">View</button>
+              <button class="row-btn primary">Invoice</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="fw">QUO-0027</div>
+            <div class="muted">SEO audit & report</div>
+          </td>
+          <td class="hide-mob">Nova Studio</td>
+          <td class="muted hide-mob">18 May 2026</td>
+          <td><span class="pill accepted">Accepted</span></td>
+          <td class="hide-mob"><span class="expiry ok">Signed 22 May</span></td>
+          <td class="amount">£950</td>
+          <td>
+            <div class="row-actions">
+              <button class="row-btn">View</button>
+              <button class="row-btn primary">Invoice</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="fw">QUO-0025</div>
+            <div class="muted">Annual strategy session</div>
+          </td>
+          <td class="hide-mob">Thornfield Legal</td>
+          <td class="muted hide-mob">4 May 2026</td>
+          <td><span class="pill accepted">Accepted</span></td>
+          <td class="hide-mob"><span class="expiry ok">Signed 9 May</span></td>
+          <td class="amount">£1,800</td>
+          <td>
+            <div class="row-actions">
+              <button class="row-btn">View</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Declined -->
+        <tr>
+          <td>
+            <div class="fw">QUO-0026</div>
+            <div class="muted">Paid ads management</div>
+          </td>
+          <td class="hide-mob">Nova Studio</td>
+          <td class="muted hide-mob">8 May 2026</td>
+          <td><span class="pill declined">Declined</span></td>
+          <td class="hide-mob"><span class="expiry ok muted">—</span></td>
+          <td class="amount">£1,400</td>
+          <td>
+            <div class="row-actions">
+              <button class="row-btn">View</button>
+              <button class="row-btn">Duplicate</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Expired -->
+        <tr>
+          <td>
+            <div class="fw">QUO-0024</div>
+            <div class="muted">Brand guidelines doc</div>
+          </td>
+          <td class="hide-mob">Bright Path Marketing</td>
+          <td class="muted hide-mob">10 Apr 2026</td>
+          <td><span class="pill expired">Expired</span></td>
+          <td class="hide-mob"><span class="expiry ok muted">Expired 10 May</span></td>
+          <td class="amount">£850</td>
+          <td>
+            <div class="row-actions">
+              <button class="row-btn">Duplicate</button>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottomnav">
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+    Dashboard
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Work log
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.5c2.8.4 5 2.7 5 5.5"/></svg>
+    Clients
+  </a>
+  <a class="bn-item active" href="#">
+    <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+    Docs
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    Accounts
+  </a>
+</nav>
+
+</body>
+</html>

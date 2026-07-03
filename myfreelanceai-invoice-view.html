@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyFreelanceAI — Invoice</title>
+<style>
+  :root{
+    --charcoal:#2A2520;
+    --mint:#2ABFA3;
+    --orange:#FF8C42;
+    --orange-soft:#FFE8D6;
+    --off-white:#FDFBF8;
+    --ink:#2A2520;
+    --ink-soft:#7A7168;
+    --card:#FFFFFF;
+    --line:#EFE7DD;
+    --red:#E05A4E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(180deg,#FFE3CC 0%,#FFF1E3 30%,var(--off-white) 70%);
+    background-attachment:fixed;
+    color:var(--ink);
+    min-height:100vh;
+    padding-bottom:90px;
+  }
+
+  /* ===== TOP NAV ===== */
+  .topnav{
+    display:flex;align-items:center;gap:28px;
+    padding:16px 32px;
+    background:rgba(255,255,255,0.72);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:50;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-0.3px;}
+  .leaf{width:26px;height:26px;flex:0 0 26px;}
+  .navlinks{display:flex;gap:6px;margin-left:12px;align-items:center;}
+  .navlinks a{
+    text-decoration:none;color:var(--ink-soft);font-size:14px;font-weight:600;
+    padding:8px 14px;border-radius:20px;
+  }
+  .navlinks a.active{background:var(--charcoal);color:#fff;}
+  .nav-dropdown{position:relative;}
+  .nav-trigger{
+    display:flex;align-items:center;gap:5px;
+    color:#fff;font-size:14px;font-weight:600;
+    padding:8px 14px;border-radius:20px;
+    background:var(--charcoal);cursor:pointer;user-select:none;
+  }
+  .nav-trigger svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;}
+  .dropdown-menu{
+    position:absolute;top:calc(100% + 8px);left:0;
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.08);
+    min-width:140px;overflow:hidden;
+  }
+  .dropdown-menu a{
+    display:block;padding:12px 16px;font-size:14px;font-weight:600;
+    text-decoration:none;color:var(--ink);
+  }
+  .dropdown-menu a:hover{background:var(--off-white);}
+  .dropdown-menu a.sub-active{color:var(--mint);}
+  .dropdown-menu .divider{height:1px;background:var(--line);}
+  .nav-spacer{flex:1;}
+  .avatar{
+    width:38px;height:38px;border-radius:50%;
+    background:var(--mint);color:#fff;font-weight:700;font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ===== PAGE ===== */
+  .page{max-width:1080px;margin:0 auto;padding:28px 20px;}
+
+  /* ===== BREADCRUMB ===== */
+  .breadcrumb{
+    display:flex;align-items:center;gap:8px;
+    font-size:13px;color:var(--ink-soft);margin-bottom:20px;
+  }
+  .breadcrumb a{color:var(--ink-soft);text-decoration:none;font-weight:600;}
+  .breadcrumb a:hover{color:var(--ink);}
+  .breadcrumb svg{width:14px;height:14px;stroke:var(--ink-soft);fill:none;stroke-width:2;stroke-linecap:round;}
+  .breadcrumb span{font-weight:700;color:var(--ink);}
+
+  /* ===== PAGE HEADER ===== */
+  .page-header{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .page-header-left{flex:1;}
+  .page-header-left h1{font-size:26px;font-weight:800;letter-spacing:-0.4px;}
+  .page-header-left p{font-size:14px;color:var(--ink-soft);margin-top:4px;}
+  .header-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+
+  /* ===== BUTTONS ===== */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--charcoal);color:#fff;border:none;cursor:pointer;
+    font-size:14px;font-weight:600;padding:11px 18px;border-radius:24px;
+  }
+  .btn svg{width:16px;height:16px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .btn-ghost{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--card);color:var(--ink);border:1px solid var(--line);cursor:pointer;
+    font-size:14px;font-weight:600;padding:11px 18px;border-radius:24px;
+  }
+  .btn-ghost svg{width:16px;height:16px;stroke:var(--ink-soft);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* status pill large */
+  .status-large{
+    font-size:13px;font-weight:700;padding:7px 16px;border-radius:24px;display:inline-flex;align-items:center;gap:6px;
+  }
+  .status-large.overdue{background:#FCE9E7;color:#B23A30;}
+  .status-large.sent{background:#FFF0E2;color:#C25E12;}
+  .status-large.paid{background:#E7F7F3;color:#1B8A76;}
+  .status-large.draft{background:#F0EEF8;color:#5B4DB8;}
+
+  /* ===== LAYOUT ===== */
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start;}
+  .col{display:flex;flex-direction:column;gap:18px;}
+
+  /* ===== PANELS ===== */
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:24px;
+  }
+  .panel h2{
+    font-size:15px;font-weight:800;letter-spacing:-0.2px;
+    padding-bottom:12px;margin-bottom:16px;
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .panel h2 .link{font-size:12px;font-weight:600;color:var(--orange);text-decoration:none;cursor:pointer;}
+
+  /* ===== INVOICE DOCUMENT ===== */
+  .invoice-doc{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:36px;
+  }
+
+  /* doc header */
+  .doc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;}
+  .doc-brand{display:flex;align-items:center;gap:10px;}
+  .doc-brand span{font-size:18px;font-weight:800;letter-spacing:-0.3px;}
+  .doc-meta{text-align:right;}
+  .doc-meta h2{font-size:22px;font-weight:800;letter-spacing:-0.4px;margin-bottom:4px;}
+  .doc-meta p{font-size:13px;color:var(--ink-soft);}
+  .doc-meta .inv-num{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+
+  /* from / to */
+  .doc-parties{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;}
+  .doc-party .label{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+  .doc-party .name{font-size:15px;font-weight:800;margin-bottom:4px;}
+  .doc-party p{font-size:13px;color:var(--ink-soft);line-height:1.6;}
+
+  /* line items table */
+  .line-items{width:100%;border-collapse:collapse;margin-bottom:24px;}
+  .line-items thead tr{border-bottom:2px solid var(--charcoal);}
+  .line-items th{
+    font-size:11px;font-weight:700;color:var(--ink-soft);
+    text-transform:uppercase;letter-spacing:0.5px;
+    padding:0 0 10px 0;text-align:left;
+  }
+  .line-items th.r{text-align:right;}
+  .line-items td{padding:14px 0;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top;}
+  .line-items td.r{text-align:right;font-weight:700;}
+  .line-items tbody tr:last-child td{border-bottom:none;}
+  .item-desc{font-weight:700;}
+  .item-sub{font-size:12px;color:var(--ink-soft);margin-top:3px;}
+
+  /* totals */
+  .doc-totals{display:flex;justify-content:flex-end;}
+  .totals-box{width:280px;}
+  .total-row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;}
+  .total-row.subtotal{border-bottom:1px dashed var(--line);}
+  .total-row .k{color:var(--ink-soft);}
+  .total-row .v{font-weight:700;}
+  .total-row.grand{
+    border-top:2px solid var(--charcoal);margin-top:4px;padding-top:12px;
+    font-size:18px;font-weight:800;
+  }
+  .total-row.grand .k{color:var(--ink);}
+  .total-row.grand .v{color:var(--mint);}
+
+  /* payment details */
+  .doc-payment{
+    margin-top:28px;padding-top:24px;border-top:1px solid var(--line);
+  }
+  .doc-payment .label{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+  .pay-details{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .pay-detail .k{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.4px;}
+  .pay-detail .v{font-size:14px;font-weight:700;margin-top:3px;}
+
+  /* doc note */
+  .doc-note{
+    margin-top:24px;padding:14px 16px;background:var(--off-white);
+    border-radius:10px;font-size:13px;color:var(--ink-soft);line-height:1.6;
+  }
+
+  /* ===== SIDE PANELS ===== */
+  /* activity timeline */
+  .timeline{display:flex;flex-direction:column;gap:0;}
+  .tl-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);}
+  .tl-item:last-child{border-bottom:none;}
+  .tl-ic{
+    width:28px;height:28px;border-radius:50%;flex:0 0 28px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .tl-ic.sent{background:#FFF0E2;}
+  .tl-ic.warn{background:#FCE9E7;}
+  .tl-ic.chase{background:#FFF8E2;}
+  .tl-ic svg{width:13px;height:13px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .tl-ic.sent svg{stroke:var(--orange);}
+  .tl-ic.warn svg{stroke:var(--red);}
+  .tl-ic.chase svg{stroke:#B8860B;}
+  .tl-body .t{font-size:13px;font-weight:700;}
+  .tl-body .s{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+
+  /* summary rows */
+  .sum-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);}
+  .sum-row:last-child{border-bottom:none;}
+  .sum-row .k{font-size:13px;color:var(--ink-soft);}
+  .sum-row .v{font-size:14px;font-weight:800;}
+  .sum-row .v.orange{color:var(--orange);}
+  .sum-row .v.red{color:var(--red);}
+  .sum-row .v.mint{color:var(--mint);}
+
+  /* ===== AI SLIM BAR ===== */
+  .ai-bar{
+    background:#fff;border:2px solid var(--orange);border-radius:16px;
+    padding:12px 16px;margin-bottom:22px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#E7F7F3;color:#1B8A76;font-size:11px;font-weight:700;
+    padding:4px 10px;border-radius:20px;white-space:nowrap;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--mint);animation:pulse 1.6s infinite;flex:0 0 8px;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(42,191,163,0.5);}70%{box-shadow:0 0 0 8px rgba(42,191,163,0);}100%{box-shadow:0 0 0 0 rgba(42,191,163,0);}}
+  .ai-bar-label{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+  .ai-bar-label span.txt{font-size:13px;font-weight:800;white-space:nowrap;}
+  .ai-bar-divider{width:1px;height:28px;background:var(--line);flex:0 0 1px;}
+  .chips-inline{display:flex;gap:6px;flex-wrap:nowrap;overflow:hidden;}
+  .chip{
+    font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap;
+    background:var(--off-white);border:1px solid var(--line);
+    padding:5px 10px;border-radius:20px;cursor:pointer;
+  }
+  .ai-bar input{
+    flex:1;border:none;outline:none;font-size:14px;
+    background:transparent;color:var(--ink);min-width:0;
+  }
+  .ai-bar input::placeholder{color:var(--ink-soft);}
+  .send{
+    width:44px;height:44px;border-radius:50%;flex:0 0 44px;
+    background:var(--charcoal);border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .send svg{width:18px;height:18px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ===== BOTTOM NAV ===== */
+  .bottomnav{
+    display:none;
+    position:fixed;bottom:0;left:0;right:0;z-index:50;
+    background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    justify-content:space-around;
+  }
+  .bn-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    text-decoration:none;color:var(--ink-soft);font-size:10px;font-weight:700;
+    padding:4px 10px;border-radius:12px;
+  }
+  .bn-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .bn-item.active{color:var(--charcoal);}
+  .bn-item.active svg{stroke:var(--mint);}
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr;}
+    .topnav .navlinks{display:none;}
+    .bottomnav{display:flex;}
+    .page{padding:20px 16px;}
+    .chips-inline{display:none;}
+    .invoice-doc{padding:20px;}
+    .doc-parties{grid-template-columns:1fr;}
+    .pay-details{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="brand">
+    <svg class="leaf" viewBox="0 0 24 24" fill="none">
+      <path d="M20 4C12 4 5 8 5 16c0 2 .6 3.4 1.5 4.5C8 14 13 9 19 7c-5 3-9 8-10.5 13.5C9.6 21 10.8 21 12 21c8 0 8-11 8-17z" fill="#2ABFA3"/>
+    </svg>
+    MyFreelanceAI
+  </div>
+  <div class="navlinks">
+    <a href="#">Dashboard</a>
+    <a href="#">Work log</a>
+    <a href="#">Clients</a>
+    <div class="nav-dropdown">
+      <div class="nav-trigger">
+        Docs
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="dropdown-menu">
+        <a href="#">Quotes</a>
+        <div class="divider"></div>
+        <a href="#" class="sub-active">Invoices</a>
+      </div>
+    </div>
+    <a href="#">Accounts</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <div class="avatar">SM</div>
+</nav>
+
+<div class="page">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="#">Docs</a>
+    <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    <a href="#">Invoices</a>
+    <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    <span>INV-0138</span>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>INV-0138</h1>
+      <p>Bright Path Marketing · Website audit</p>
+    </div>
+    <div class="header-actions">
+      <span class="status-large overdue">⚠ Overdue by 5 days</span>
+      <button class="btn-ghost">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download PDF
+      </button>
+      <button class="btn">
+        <svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+        Resend invoice
+      </button>
+    </div>
+  </div>
+
+  <!-- AI SLIM BAR -->
+  <div class="ai-bar">
+    <div class="ai-bar-label">
+      <span class="badge"><span class="dot"></span>AI</span>
+      <span class="txt">Ask about this invoice</span>
+    </div>
+    <div class="ai-bar-divider"></div>
+    <div class="chips-inline">
+      <div class="chip">Write a chaser email</div>
+      <div class="chip">Mark as paid</div>
+      <div class="chip">Add a late fee</div>
+    </div>
+    <input type="text" placeholder="Or type your own question…">
+    <button class="send" aria-label="Send">
+      <svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+    </button>
+  </div>
+
+  <div class="layout">
+
+    <!-- LEFT: INVOICE DOCUMENT -->
+    <div class="col">
+      <div class="invoice-doc">
+
+        <!-- Doc header -->
+        <div class="doc-header">
+          <div class="doc-brand">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path d="M20 4C12 4 5 8 5 16c0 2 .6 3.4 1.5 4.5C8 14 13 9 19 7c-5 3-9 8-10.5 13.5C9.6 21 10.8 21 12 21c8 0 8-11 8-17z" fill="#2ABFA3"/>
+            </svg>
+            <span>Sam Mitchell</span>
+          </div>
+          <div class="doc-meta">
+            <div class="inv-num">INV-0138</div>
+            <p>Issued: 10 Jun 2026</p>
+            <p>Due: <strong style="color:var(--red);">28 Jun 2026</strong></p>
+          </div>
+        </div>
+
+        <!-- From / To -->
+        <div class="doc-parties">
+          <div class="doc-party">
+            <div class="label">From</div>
+            <div class="name">Sam Mitchell</div>
+            <p>
+              42 Canal Street<br>
+              Leeds, LS1 4DB<br>
+              sam@sammitchell.co.uk<br>
+              UTR: 1234 56789
+            </p>
+          </div>
+          <div class="doc-party">
+            <div class="label">Bill to</div>
+            <div class="name">Bright Path Marketing</div>
+            <p>
+              Sarah Mitchell<br>
+              14 Weaver Street<br>
+              Manchester, M4 5JW<br>
+              VAT: GB 412 8765 33
+            </p>
+          </div>
+        </div>
+
+        <!-- Line items -->
+        <table class="line-items">
+          <thead>
+            <tr>
+              <th style="width:40%;">Description</th>
+              <th>Qty</th>
+              <th>Rate</th>
+              <th class="r">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="item-desc">Full website SEO audit</div>
+                <div class="item-sub">Review of all pages, meta data, backlink profile and technical issues</div>
+              </td>
+              <td>4 hrs</td>
+              <td>£45/hr</td>
+              <td class="r">£180.00</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="item-desc">Written audit report</div>
+                <div class="item-sub">12-page document with findings and recommendations</div>
+              </td>
+              <td>2 hrs</td>
+              <td>£45/hr</td>
+              <td class="r">£90.00</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="item-desc">Competitor analysis</div>
+                <div class="item-sub">Analysis of 3 competitor sites and keyword gap report</div>
+              </td>
+              <td>2 hrs</td>
+              <td>£45/hr</td>
+              <td class="r">£90.00</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="item-desc">Presentation & walkthrough call</div>
+                <div class="item-sub">1 hour Zoom call to present findings</div>
+              </td>
+              <td>1 hr</td>
+              <td>£45/hr</td>
+              <td class="r">£45.00</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="item-desc">Travel expenses</div>
+                <div class="item-sub">Manchester return — 22 Jun 2026</div>
+              </td>
+              <td>1</td>
+              <td>£55.00</td>
+              <td class="r">£55.00</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="doc-totals">
+          <div class="totals-box">
+            <div class="total-row subtotal">
+              <span class="k">Subtotal</span>
+              <span class="v">£460.00</span>
+            </div>
+            <div class="total-row">
+              <span class="k">VAT (0% — not VAT registered)</span>
+              <span class="v">£0.00</span>
+            </div>
+            <div class="total-row grand">
+              <span class="k">Total due</span>
+              <span class="v">£460.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment details -->
+        <div class="doc-payment">
+          <div class="label">Payment details</div>
+          <div class="pay-details">
+            <div class="pay-detail">
+              <div class="k">Account name</div>
+              <div class="v">S Mitchell</div>
+            </div>
+            <div class="pay-detail">
+              <div class="k">Sort code</div>
+              <div class="v">12-34-56</div>
+            </div>
+            <div class="pay-detail">
+              <div class="k">Account number</div>
+              <div class="v">87654321</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note -->
+        <div class="doc-note">
+          Thank you for your business! Please use the invoice number INV-0138 as your payment reference. If you have any questions please don't hesitate to get in touch.
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: SIDE PANELS -->
+    <div class="col">
+
+      <!-- INVOICE SUMMARY -->
+      <div class="panel">
+        <h2>Summary</h2>
+        <div class="sum-row">
+          <span class="k">Invoice total</span>
+          <span class="v">£460.00</span>
+        </div>
+        <div class="sum-row">
+          <span class="k">Amount paid</span>
+          <span class="v mint">£0.00</span>
+        </div>
+        <div class="sum-row">
+          <span class="k">Balance due</span>
+          <span class="v red">£460.00</span>
+        </div>
+        <div class="sum-row">
+          <span class="k">Due date</span>
+          <span class="v red">28 Jun 2026</span>
+        </div>
+        <div class="sum-row">
+          <span class="k">Days overdue</span>
+          <span class="v red">5 days</span>
+        </div>
+        <div class="sum-row">
+          <span class="k">Client avg. pay time</span>
+          <span class="v">9 days</span>
+        </div>
+        <button class="btn" style="width:100%;justify-content:center;margin-top:16px;">
+          <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+          Mark as paid
+        </button>
+      </div>
+
+      <!-- ACTIVITY -->
+      <div class="panel">
+        <h2>Activity</h2>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-ic warn">
+              <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.5 2 19h20L13.7 3.5a2 2 0 0 0-3.4 0z"/></svg>
+            </div>
+            <div class="tl-body">
+              <div class="t">Invoice overdue</div>
+              <div class="s">Today · 5 days past due date</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-ic chase">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>
+            </div>
+            <div class="tl-body">
+              <div class="t">Chaser email sent</div>
+              <div class="s">1 Jul 2026 · 3 days after due date</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-ic sent">
+              <svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+            </div>
+            <div class="tl-body">
+              <div class="t">Invoice sent</div>
+              <div class="s">10 Jun 2026 · Opened same day</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-ic sent">
+              <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+            </div>
+            <div class="tl-body">
+              <div class="t">Invoice created</div>
+              <div class="s">10 Jun 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RELATED -->
+      <div class="panel">
+        <h2>Related <a class="link" href="#">View client</a></h2>
+        <div class="sum-row">
+          <span class="k">Client</span>
+          <span class="v">Bright Path Marketing</span>
+        </div>
+        <div class="sum-row">
+          <span class="k">Contact</span>
+          <span class="v">Sarah Mitchell</span>
+        </div>
+        <div class="sum-row">
+          <span class="k">Total billed to client</span>
+          <span class="v">£18,420</span>
+        </div>
+        <div class="sum-row">
+          <span class="k">Other open invoices</span>
+          <span class="v orange">1 (INV-0142)</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottomnav">
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+    Dashboard
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Work log
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.5c2.8.4 5 2.7 5 5.5"/></svg>
+    Clients
+  </a>
+  <a class="bn-item active" href="#">
+    <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+    Docs
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    Accounts
+  </a>
+</nav>
+
+</body>
+</html>

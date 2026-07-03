@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyFreelanceAI — Accounts</title>
+<style>
+  :root{
+    --charcoal:#2A2520;
+    --mint:#2ABFA3;
+    --orange:#FF8C42;
+    --orange-soft:#FFE8D6;
+    --off-white:#FDFBF8;
+    --ink:#2A2520;
+    --ink-soft:#7A7168;
+    --card:#FFFFFF;
+    --line:#EFE7DD;
+    --red:#E05A4E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(180deg,#FFE3CC 0%,#FFF1E3 30%,var(--off-white) 70%);
+    background-attachment:fixed;
+    color:var(--ink);
+    min-height:100vh;
+    padding-bottom:90px;
+  }
+
+  /* ===== TOP NAV ===== */
+  .topnav{
+    display:flex;align-items:center;gap:28px;
+    padding:16px 32px;
+    background:rgba(255,255,255,0.72);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:50;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-0.3px;}
+  .leaf{width:26px;height:26px;flex:0 0 26px;}
+  .navlinks{display:flex;gap:6px;margin-left:12px;align-items:center;}
+  .navlinks a{
+    text-decoration:none;color:var(--ink-soft);font-size:14px;font-weight:600;
+    padding:8px 14px;border-radius:20px;
+  }
+  .navlinks a.active{background:var(--charcoal);color:#fff;}
+  .nav-dropdown{position:relative;}
+  .nav-trigger{
+    display:flex;align-items:center;gap:5px;
+    text-decoration:none;color:var(--ink-soft);font-size:14px;font-weight:600;
+    padding:8px 14px;border-radius:20px;cursor:pointer;user-select:none;
+  }
+  .nav-trigger svg{width:12px;height:12px;stroke:var(--ink-soft);fill:none;stroke-width:2.5;stroke-linecap:round;}
+  .dropdown-menu{
+    position:absolute;top:calc(100% + 8px);left:0;
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.08);
+    min-width:140px;overflow:hidden;
+  }
+  .dropdown-menu a{
+    display:block;padding:12px 16px;font-size:14px;font-weight:600;
+    text-decoration:none;color:var(--ink);
+  }
+  .dropdown-menu a:hover{background:var(--off-white);}
+  .dropdown-menu .divider{height:1px;background:var(--line);}
+  .nav-spacer{flex:1;}
+  .avatar{
+    width:38px;height:38px;border-radius:50%;
+    background:var(--mint);color:#fff;font-weight:700;font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ===== PAGE ===== */
+  .page{max-width:1080px;margin:0 auto;padding:28px 20px;}
+
+  /* ===== PAGE HEADER ===== */
+  .page-header{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .page-header h1{font-size:26px;font-weight:800;letter-spacing:-0.4px;flex:1;}
+  .tax-year-select{
+    border:1px solid var(--line);background:var(--card);border-radius:24px;
+    padding:9px 16px;font-size:13px;font-weight:700;color:var(--ink);
+    outline:none;cursor:pointer;
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--charcoal);color:#fff;border:none;cursor:pointer;
+    font-size:14px;font-weight:600;padding:11px 18px;border-radius:24px;
+  }
+  .btn svg{width:16px;height:16px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ===== STAT STRIP ===== */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;}
+  .stat .label{font-size:12px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.5px;}
+  .stat .value{font-size:22px;font-weight:800;margin-top:6px;letter-spacing:-0.4px;}
+  .stat .value.mint{color:var(--mint);}
+  .stat .value.orange{color:var(--orange);}
+  .stat .value.red{color:var(--red);}
+  .stat .sub{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+
+  /* ===== AI SLIM BAR ===== */
+  .ai-bar{
+    background:#fff;border:2px solid var(--orange);border-radius:16px;
+    padding:12px 16px;margin-bottom:22px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#E7F7F3;color:#1B8A76;font-size:11px;font-weight:700;
+    padding:4px 10px;border-radius:20px;white-space:nowrap;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--mint);animation:pulse 1.6s infinite;flex:0 0 8px;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(42,191,163,0.5);}70%{box-shadow:0 0 0 8px rgba(42,191,163,0);}100%{box-shadow:0 0 0 0 rgba(42,191,163,0);}}
+  .ai-bar-label{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+  .ai-bar-label span.txt{font-size:13px;font-weight:800;white-space:nowrap;}
+  .ai-bar-divider{width:1px;height:28px;background:var(--line);flex:0 0 1px;}
+  .chips-inline{display:flex;gap:6px;flex-wrap:nowrap;overflow:hidden;}
+  .chip{
+    font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap;
+    background:var(--off-white);border:1px solid var(--line);
+    padding:5px 10px;border-radius:20px;cursor:pointer;
+  }
+  .ai-bar input{
+    flex:1;border:none;outline:none;font-size:14px;
+    background:transparent;color:var(--ink);min-width:0;
+  }
+  .ai-bar input::placeholder{color:var(--ink-soft);}
+  .send{
+    width:44px;height:44px;border-radius:50%;flex:0 0 44px;
+    background:var(--charcoal);border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .send svg{width:18px;height:18px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ===== GRID ===== */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px;}
+  .full{grid-column:1/-1;}
+
+  /* ===== PANELS ===== */
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:20px;
+  }
+  .panel h2{
+    font-size:15px;font-weight:800;letter-spacing:-0.2px;
+    padding-bottom:12px;margin-bottom:16px;
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .panel h2 .link{font-size:12px;font-weight:600;color:var(--orange);text-decoration:none;cursor:pointer;}
+
+  /* ===== TAX ESTIMATE PANEL ===== */
+  .tax-highlight{
+    background:linear-gradient(135deg,#2A2520 0%,#3D3530 100%);
+    border:none;color:#fff;
+  }
+  .tax-highlight h2{color:#fff;border-bottom-color:rgba(255,255,255,0.15);}
+  .tax-highlight h2 .link{color:var(--mint);}
+  .tax-rows{display:flex;flex-direction:column;gap:0;}
+  .tax-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .tax-row:last-child{border-bottom:none;}
+  .tax-row .k{font-size:13px;color:rgba(255,255,255,0.7);}
+  .tax-row .v{font-size:15px;font-weight:800;color:#fff;}
+  .tax-row .v.mint{color:var(--mint);}
+  .tax-row .v.orange{color:#FFB347;}
+  .tax-total{
+    margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.2);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .tax-total .k{font-size:14px;font-weight:700;color:rgba(255,255,255,0.8);}
+  .tax-total .v{font-size:26px;font-weight:800;color:var(--mint);}
+  .tax-note{font-size:11px;color:rgba(255,255,255,0.45);margin-top:10px;line-height:1.5;}
+
+  /* ===== INCOME / EXPENSE ROWS ===== */
+  .ie-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:11px 0;border-bottom:1px solid var(--line);
+  }
+  .ie-row:last-child{border-bottom:none;}
+  .ie-row .k{font-size:13px;font-weight:600;}
+  .ie-row .sub{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+  .ie-row .v{font-size:14px;font-weight:800;}
+  .ie-row .v.pos{color:var(--mint);}
+  .ie-row .v.neg{color:var(--red);}
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-wrap{margin-top:14px;}
+  .progress-label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:6px;}
+  .progress-label .soft{color:var(--ink-soft);}
+  .progress-track{height:8px;background:var(--line);border-radius:99px;overflow:hidden;}
+  .progress-fill{height:100%;border-radius:99px;background:var(--mint);}
+  .progress-fill.warn{background:var(--orange);}
+
+  /* ===== SELF ASSESSMENT CHECKLIST ===== */
+  .checklist{display:flex;flex-direction:column;gap:0;}
+  .check-row{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 0;border-bottom:1px solid var(--line);
+  }
+  .check-row:last-child{border-bottom:none;}
+  .check-ic{
+    width:28px;height:28px;border-radius:50%;flex:0 0 28px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .check-ic.done{background:#E7F7F3;}
+  .check-ic.todo{background:var(--off-white);border:2px dashed var(--line);}
+  .check-ic.warn{background:#FFF0E2;}
+  .check-ic svg{width:14px;height:14px;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+  .check-ic.done svg{stroke:var(--mint);}
+  .check-ic.warn svg{stroke:var(--orange);}
+  .check-body{flex:1;}
+  .check-body .t{font-size:13px;font-weight:700;}
+  .check-body .s{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .check-date{font-size:11px;font-weight:700;color:var(--ink-soft);white-space:nowrap;}
+  .check-date.warn{color:var(--orange);}
+
+  /* ===== MONTHLY INCOME BAR CHART ===== */
+  .chart-wrap{margin-top:4px;}
+  .bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .bar{width:100%;border-radius:6px 6px 0 0;background:var(--line);position:relative;min-height:4px;}
+  .bar.filled{background:var(--mint);}
+  .bar.current{background:var(--orange);}
+  .bar-lbl{font-size:10px;font-weight:700;color:var(--ink-soft);text-align:center;}
+  .bar-val{font-size:10px;font-weight:800;color:var(--ink-soft);margin-bottom:2px;}
+
+  /* ===== EXPENSES TABLE ===== */
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.5px;padding:0 8px 10px 8px;}
+  td{padding:12px 8px;border-top:1px solid var(--line);vertical-align:middle;}
+  .amount-r{font-weight:700;text-align:right;}
+  th.amount-r{text-align:right;}
+  .pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;display:inline-block;}
+  .pill.deductible{background:#E7F7F3;color:#1B8A76;}
+  .pill.personal{background:#F2F2F2;color:#888;}
+  .muted{color:var(--ink-soft);}
+
+  /* ===== BOTTOM NAV ===== */
+  .bottomnav{
+    display:none;
+    position:fixed;bottom:0;left:0;right:0;z-index:50;
+    background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    justify-content:space-around;
+  }
+  .bn-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    text-decoration:none;color:var(--ink-soft);font-size:10px;font-weight:700;
+    padding:4px 10px;border-radius:12px;
+  }
+  .bn-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .bn-item.active{color:var(--charcoal);}
+  .bn-item.active svg{stroke:var(--mint);}
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width:860px){
+    .topnav .navlinks{display:none;}
+    .bottomnav{display:flex;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .grid{grid-template-columns:1fr;}
+    .grid-3{grid-template-columns:1fr;}
+    .page{padding:20px 16px;}
+    .chips-inline{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="brand">
+    <svg class="leaf" viewBox="0 0 24 24" fill="none">
+      <path d="M20 4C12 4 5 8 5 16c0 2 .6 3.4 1.5 4.5C8 14 13 9 19 7c-5 3-9 8-10.5 13.5C9.6 21 10.8 21 12 21c8 0 8-11 8-17z" fill="#2ABFA3"/>
+    </svg>
+    MyFreelanceAI
+  </div>
+  <div class="navlinks">
+    <a href="#">Dashboard</a>
+    <a href="#">Work log</a>
+    <a href="#">Clients</a>
+    <div class="nav-dropdown">
+      <div class="nav-trigger">
+        Docs
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="dropdown-menu">
+        <a href="#">Quotes</a>
+        <div class="divider"></div>
+        <a href="#">Invoices</a>
+      </div>
+    </div>
+    <a href="#" class="active">Accounts</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <div class="avatar">SM</div>
+</nav>
+
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>Accounts</h1>
+    <select class="tax-year-select">
+      <option>Tax year 2025–26</option>
+      <option>Tax year 2024–25</option>
+      <option>Tax year 2023–24</option>
+    </select>
+    <button class="btn">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export for accountant
+    </button>
+  </div>
+
+  <!-- STAT STRIP -->
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Total income</div>
+      <div class="value">£38,420</div>
+      <div class="sub">Apr 2025 – today</div>
+    </div>
+    <div class="stat">
+      <div class="label">Total expenses</div>
+      <div class="value orange">£4,815</div>
+      <div class="sub">£3,210 tax-deductible</div>
+    </div>
+    <div class="stat">
+      <div class="label">Taxable profit</div>
+      <div class="value mint">£35,210</div>
+      <div class="sub">after deductible expenses</div>
+    </div>
+    <div class="stat">
+      <div class="label">Tax set aside</div>
+      <div class="value red">£8,450</div>
+      <div class="sub">est. owed Jan 2027</div>
+    </div>
+  </div>
+
+  <!-- AI SLIM BAR -->
+  <div class="ai-bar">
+    <div class="ai-bar-label">
+      <span class="badge"><span class="dot"></span>AI</span>
+      <span class="txt">Ask about your accounts</span>
+    </div>
+    <div class="ai-bar-divider"></div>
+    <div class="chips-inline">
+      <div class="chip">How much tax do I owe?</div>
+      <div class="chip">What can I claim this year?</div>
+      <div class="chip">Am I on track vs last year?</div>
+    </div>
+    <input type="text" placeholder="Or type your own question…">
+    <button class="send" aria-label="Send">
+      <svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+    </button>
+  </div>
+
+  <!-- ROW 1: Tax estimate + Income breakdown -->
+  <div class="grid" style="margin-bottom:18px;">
+
+    <!-- TAX ESTIMATE -->
+    <div class="panel tax-highlight">
+      <h2>Estimated tax bill <a class="link" href="#">How is this calculated?</a></h2>
+      <div class="tax-rows">
+        <div class="tax-row">
+          <div class="k">Taxable profit</div>
+          <div class="v">£35,210</div>
+        </div>
+        <div class="tax-row">
+          <div class="k">Personal allowance (2025–26)</div>
+          <div class="v">– £12,570</div>
+        </div>
+        <div class="tax-row">
+          <div class="k">Income tax (basic rate 20%)</div>
+          <div class="v orange">£4,528</div>
+        </div>
+        <div class="tax-row">
+          <div class="k">Class 4 NI (9% on £22,640)</div>
+          <div class="v orange">£2,038</div>
+        </div>
+        <div class="tax-row">
+          <div class="k">Class 2 NI (flat rate)</div>
+          <div class="v orange">£179</div>
+        </div>
+      </div>
+      <div class="tax-total">
+        <div class="k">Total estimated tax</div>
+        <div class="v">£6,745</div>
+      </div>
+      <div class="tax-note">Estimate based on income logged to date. Your actual bill may differ — always check with your accountant before filing.</div>
+    </div>
+
+    <!-- INCOME BREAKDOWN -->
+    <div class="panel">
+      <h2>Income by month</h2>
+      <div class="chart-wrap">
+        <div class="bar-chart">
+          <!-- Apr -->
+          <div class="bar-col">
+            <div class="bar-val">£2.8k</div>
+            <div class="bar filled" style="height:56px;"></div>
+            <div class="bar-lbl">Apr</div>
+          </div>
+          <!-- May -->
+          <div class="bar-col">
+            <div class="bar-val">£3.1k</div>
+            <div class="bar filled" style="height:62px;"></div>
+            <div class="bar-lbl">May</div>
+          </div>
+          <!-- Jun -->
+          <div class="bar-col">
+            <div class="bar-val">£4.2k</div>
+            <div class="bar filled" style="height:84px;"></div>
+            <div class="bar-lbl">Jun</div>
+          </div>
+          <!-- Jul — current -->
+          <div class="bar-col">
+            <div class="bar-val" style="color:var(--orange);">£1.1k</div>
+            <div class="bar current" style="height:22px;"></div>
+            <div class="bar-lbl" style="color:var(--orange);">Jul</div>
+          </div>
+          <!-- rest of year, empty/projected -->
+          <div class="bar-col">
+            <div class="bar-val" style="opacity:0;">—</div>
+            <div class="bar" style="height:60px;opacity:0.3;"></div>
+            <div class="bar-lbl">Aug</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val" style="opacity:0;">—</div>
+            <div class="bar" style="height:60px;opacity:0.3;"></div>
+            <div class="bar-lbl">Sep</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val" style="opacity:0;">—</div>
+            <div class="bar" style="height:60px;opacity:0.3;"></div>
+            <div class="bar-lbl">Oct</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val" style="opacity:0;">—</div>
+            <div class="bar" style="height:60px;opacity:0.3;"></div>
+            <div class="bar-lbl">Nov</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val" style="opacity:0;">—</div>
+            <div class="bar" style="height:60px;opacity:0.3;"></div>
+            <div class="bar-lbl">Dec</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val" style="opacity:0;">—</div>
+            <div class="bar" style="height:60px;opacity:0.3;"></div>
+            <div class="bar-lbl">Jan</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val" style="opacity:0;">—</div>
+            <div class="bar" style="height:60px;opacity:0.3;"></div>
+            <div class="bar-lbl">Feb</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val" style="opacity:0;">—</div>
+            <div class="bar" style="height:60px;opacity:0.3;"></div>
+            <div class="bar-lbl">Mar</div>
+          </div>
+        </div>
+        <div class="progress-wrap" style="margin-top:18px;">
+          <div class="progress-label">
+            <span>Tax year progress</span>
+            <span class="soft">Q1 of 4 complete</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:28%;"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ROW 2: Self Assessment + Income sources + Expenses -->
+  <div class="grid-3">
+
+    <!-- SELF ASSESSMENT CHECKLIST -->
+    <div class="panel">
+      <h2>Self Assessment <a class="link" href="#">HMRC →</a></h2>
+      <div class="checklist">
+        <div class="check-row">
+          <div class="check-ic done"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="check-body">
+            <div class="t">Register for Self Assessment</div>
+            <div class="s">Registered and UTR confirmed</div>
+          </div>
+          <div class="check-date">Done</div>
+        </div>
+        <div class="check-row">
+          <div class="check-ic done"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="check-body">
+            <div class="t">Keep records up to date</div>
+            <div class="s">Income & expenses logged</div>
+          </div>
+          <div class="check-date">Ongoing</div>
+        </div>
+        <div class="check-row">
+          <div class="check-ic todo"></div>
+          <div class="check-body">
+            <div class="t">File your tax return</div>
+            <div class="s">For tax year ending Apr 2026</div>
+          </div>
+          <div class="check-date">By 31 Jan 2027</div>
+        </div>
+        <div class="check-row">
+          <div class="check-ic warn"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.5 2 19h20L13.7 3.5a2 2 0 0 0-3.4 0z"/></svg></div>
+          <div class="check-body">
+            <div class="t">Pay your tax bill</div>
+            <div class="s">Estimated £6,745 due</div>
+          </div>
+          <div class="check-date warn">31 Jan 2027</div>
+        </div>
+        <div class="check-row">
+          <div class="check-ic todo"></div>
+          <div class="check-body">
+            <div class="t">Payment on account</div>
+            <div class="s">First instalment due</div>
+          </div>
+          <div class="check-date">31 Jan 2027</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INCOME SOURCES -->
+    <div class="panel">
+      <h2>Income by client</h2>
+      <div class="ie-row">
+        <div>
+          <div class="k">Bright Path Marketing</div>
+          <div class="sub">14 invoices paid</div>
+        </div>
+        <div class="v pos">£18,420</div>
+      </div>
+      <div class="ie-row">
+        <div>
+          <div class="k">Nova Studio</div>
+          <div class="sub">7 invoices paid</div>
+        </div>
+        <div class="v pos">£11,600</div>
+      </div>
+      <div class="ie-row">
+        <div>
+          <div class="k">Thornfield Legal</div>
+          <div class="sub">5 invoices paid</div>
+        </div>
+        <div class="v pos">£8,400</div>
+      </div>
+      <div class="ie-row" style="border-bottom:none;padding-top:14px;margin-top:4px;border-top:2px solid var(--line);">
+        <div class="k" style="font-weight:800;">Total</div>
+        <div class="v pos" style="font-size:16px;">£38,420</div>
+      </div>
+    </div>
+
+    <!-- EXPENSES SUMMARY -->
+    <div class="panel">
+      <h2>Expenses <a class="link" href="#">Add expense</a></h2>
+      <div class="ie-row">
+        <div>
+          <div class="k">Software & subscriptions</div>
+          <div class="sub">Adobe, Notion, Figma…</div>
+        </div>
+        <div class="v neg">£1,240</div>
+      </div>
+      <div class="ie-row">
+        <div>
+          <div class="k">Home office</div>
+          <div class="sub">Proportion of bills</div>
+        </div>
+        <div class="v neg">£820</div>
+      </div>
+      <div class="ie-row">
+        <div>
+          <div class="k">Travel & transport</div>
+          <div class="sub">Client meetings</div>
+        </div>
+        <div class="v neg">£540</div>
+      </div>
+      <div class="ie-row">
+        <div>
+          <div class="k">Equipment</div>
+          <div class="sub">Keyboard, monitor</div>
+        </div>
+        <div class="v neg">£610</div>
+      </div>
+      <div class="ie-row">
+        <div>
+          <div class="k">Other / personal</div>
+          <div class="sub">Not tax-deductible</div>
+        </div>
+        <div class="v muted">£1,605</div>
+      </div>
+      <div class="ie-row" style="border-bottom:none;padding-top:14px;margin-top:4px;border-top:2px solid var(--line);">
+        <div>
+          <div class="k" style="font-weight:800;">Deductible total</div>
+          <div class="sub">Reduces your tax bill</div>
+        </div>
+        <div class="v pos" style="font-size:16px;">£3,210</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottomnav">
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+    Dashboard
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Work log
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.5c2.8.4 5 2.7 5 5.5"/></svg>
+    Clients
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+    Docs
+  </a>
+  <a class="bn-item active" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    Accounts
+  </a>
+</nav>
+
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyFreelanceAI — Client Page</title>
+<style>
+  :root{
+    --charcoal:#2A2520;
+    --mint:#2ABFA3;
+    --orange:#FF8C42;
+    --orange-soft:#FFE8D6;
+    --off-white:#FDFBF8;
+    --ink:#2A2520;
+    --ink-soft:#7A7168;
+    --card:#FFFFFF;
+    --line:#EFE7DD;
+    --red:#E05A4E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(180deg,#FFE3CC 0%, #FFF1E3 30%, var(--off-white) 70%);
+    background-attachment:fixed;
+    color:var(--ink);
+    min-height:100vh;
+    padding-bottom:90px;
+  }
+
+  /* ===== TOP NAV (desktop) ===== */
+  .topnav{
+    display:flex;align-items:center;gap:28px;
+    padding:16px 32px;
+    background:rgba(255,255,255,0.72);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:50;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-0.3px;}
+  .leaf{width:26px;height:26px;flex:0 0 26px;}
+  .navlinks{display:flex;gap:6px;margin-left:12px;}
+  .navlinks a{
+    text-decoration:none;color:var(--ink-soft);font-size:14px;font-weight:600;
+    padding:8px 14px;border-radius:20px;
+  }
+  .navlinks a.active{background:var(--charcoal);color:#fff;}
+  .nav-spacer{flex:1;}
+  .avatar{
+    width:38px;height:38px;border-radius:50%;
+    background:var(--mint);color:#fff;font-weight:700;font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ===== LAYOUT ===== */
+  .page{max-width:1080px;margin:0 auto;padding:28px 20px;}
+
+  /* ===== CLIENT HEADER ===== */
+  .client-header{
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .client-avatar{
+    width:64px;height:64px;border-radius:50%;
+    background:var(--mint);color:#fff;font-weight:800;font-size:22px;
+    display:flex;align-items:center;justify-content:center;flex:0 0 64px;
+  }
+  .client-name h1{font-size:24px;letter-spacing:-0.4px;}
+  .client-name p{color:var(--ink-soft);font-size:14px;margin-top:2px;}
+  .client-status{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#E7F7F3;color:#1B8A76;font-size:12px;font-weight:700;
+    padding:4px 10px;border-radius:20px;margin-top:6px;
+  }
+  .header-actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;}
+
+  /* ===== BUTTONS: charcoal + mint icon ===== */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--charcoal);color:#fff;border:none;cursor:pointer;
+    font-size:14px;font-weight:600;padding:11px 18px;border-radius:24px;
+  }
+  .btn svg{width:16px;height:16px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ===== STAT STRIP ===== */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+  .stat{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:16px 18px;
+  }
+  .stat .label{font-size:12px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.5px;}
+  .stat .value{font-size:22px;font-weight:800;margin-top:6px;letter-spacing:-0.4px;}
+  .stat .value.mint{color:var(--mint);}
+  .stat .value.orange{color:var(--orange);}
+  .stat .value.red{color:var(--red);}
+  .stat .sub{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+
+  /* ===== GRID ===== */
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start;}
+  .col{display:flex;flex-direction:column;gap:18px;}
+
+  /* ===== PANELS ===== */
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:20px;
+  }
+  .panel h2{
+    font-size:15px;font-weight:800;letter-spacing:-0.2px;
+    padding-bottom:12px;margin-bottom:14px;
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .panel h2 .link{font-size:12px;font-weight:600;color:var(--orange);text-decoration:none;}
+
+  /* contact rows */
+  .c-row{display:flex;gap:12px;align-items:flex-start;padding:8px 0;}
+  .c-row svg{width:16px;height:16px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-top:2px;flex:0 0 16px;}
+  .c-row .k{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.5px;}
+  .c-row .v{font-size:14px;margin-top:1px;}
+
+  /* rates */
+  .rate-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line);}
+  .rate-row:last-child{border-bottom:none;}
+  .rate-row .rname{font-size:14px;font-weight:600;}
+  .rate-row .rnote{font-size:12px;color:var(--ink-soft);margin-top:1px;}
+  .rate-row .rval{font-size:16px;font-weight:800;color:var(--charcoal);}
+
+  /* ===== AI SLIM BAR ===== */
+  .ai-bar{
+    background:#fff;border:2px solid var(--orange);border-radius:16px;
+    padding:12px 16px;margin-bottom:22px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .ai-bar-label{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+  .ai-bar-label span{font-size:13px;font-weight:800;white-space:nowrap;}
+  .ai-bar input{
+    flex:1;border:none;outline:none;font-size:14px;
+    background:transparent;color:var(--ink);min-width:0;
+  }
+  .ai-bar input::placeholder{color:var(--ink-soft);}
+  .ai-bar .chips-inline{display:flex;gap:6px;flex-wrap:nowrap;overflow:hidden;}
+  .ai-bar .chip{
+    font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap;
+    background:var(--off-white);border:1px solid var(--line);
+    padding:5px 10px;border-radius:20px;cursor:pointer;
+  }
+  .ai-bar-divider{width:1px;height:28px;background:var(--line);flex:0 0 1px;}
+
+  /* ===== AI ASSISTANT CARD (left col, now without the bar) ===== */
+  .ai-card{
+    background:#fff;border:2px solid var(--orange);border-radius:16px;padding:20px;
+  }
+  .ai-head{display:flex;align-items:center;gap:10px;}
+  .ai-head h2{font-size:15px;font-weight:800;flex:1;}
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#E7F7F3;color:#1B8A76;font-size:11px;font-weight:700;
+    padding:4px 10px;border-radius:20px;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--mint);animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(42,191,163,0.5);}70%{box-shadow:0 0 0 8px rgba(42,191,163,0);}100%{box-shadow:0 0 0 0 rgba(42,191,163,0);}}
+  .ai-sep{border:none;border-top:2px dashed var(--orange-soft);border-top-color:#FFCBA3;margin:14px 0;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+  .chip{
+    font-size:12px;font-weight:600;color:var(--ink);
+    background:var(--off-white);border:1px solid var(--line);
+    padding:7px 12px;border-radius:20px;cursor:pointer;
+  }
+  .ai-input{display:flex;gap:10px;}
+  .ai-input input{
+    flex:1;border:1px solid var(--line);border-radius:24px;
+    padding:11px 16px;font-size:14px;background:var(--off-white);outline:none;
+  }
+  .send{
+    width:44px;height:44px;border-radius:50%;flex:0 0 44px;
+    background:var(--charcoal);border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .send svg{width:18px;height:18px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ===== TABLES ===== */
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{
+    text-align:left;font-size:11px;font-weight:700;color:var(--ink-soft);
+    text-transform:uppercase;letter-spacing:0.5px;padding:0 8px 10px 8px;
+  }
+  td{padding:12px 8px;border-top:1px solid var(--line);vertical-align:middle;}
+  .amount{font-weight:700;text-align:right;}
+  th.amount{text-align:right;}
+  .pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;display:inline-block;}
+  .pill.paid{background:#E7F7F3;color:#1B8A76;}
+  .pill.sent{background:#FFF0E2;color:#C25E12;}
+  .pill.overdue{background:#FCE9E7;color:#B23A30;}
+  .muted{color:var(--ink-soft);}
+
+  /* work log entries */
+  .wl-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line);}
+  .wl-row:first-of-type{border-top:none;}
+  .wl-date{
+    flex:0 0 46px;text-align:center;background:var(--off-white);
+    border:1px solid var(--line);border-radius:10px;padding:6px 0;
+  }
+  .wl-date .d{font-size:16px;font-weight:800;line-height:1;}
+  .wl-date .m{font-size:10px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;}
+  .wl-body{flex:1;}
+  .wl-body .t{font-size:14px;font-weight:600;}
+  .wl-body .s{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .wl-hrs{font-size:13px;font-weight:800;color:var(--mint);white-space:nowrap;}
+
+  /* payment history */
+  .pay-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+  .pay-row:first-of-type{border-top:none;}
+  .pay-ic{
+    width:32px;height:32px;border-radius:50%;flex:0 0 32px;
+    background:#E7F7F3;display:flex;align-items:center;justify-content:center;
+  }
+  .pay-ic svg{width:15px;height:15px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .pay-body{flex:1;}
+  .pay-body .t{font-size:13px;font-weight:600;}
+  .pay-body .s{font-size:12px;color:var(--ink-soft);}
+  .pay-amt{font-size:14px;font-weight:800;}
+
+  /* ===== BOTTOM NAV (mobile) ===== */
+  .bottomnav{
+    display:none;
+    position:fixed;bottom:0;left:0;right:0;z-index:50;
+    background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    justify-content:space-around;
+  }
+  .bn-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    text-decoration:none;color:var(--ink-soft);font-size:10px;font-weight:700;
+    padding:4px 10px;border-radius:12px;
+  }
+  .bn-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .bn-item.active{color:var(--charcoal);}
+  .bn-item.active svg{stroke:var(--mint);}
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width:860px){
+    .topnav .navlinks{display:none;}
+    .bottomnav{display:flex;}
+    .grid{grid-template-columns:1fr;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .header-actions{margin-left:0;width:100%;}
+    .header-actions .btn{flex:1;justify-content:center;}
+    .page{padding:20px 16px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="brand">
+    <svg class="leaf" viewBox="0 0 24 24" fill="none">
+      <path d="M20 4C12 4 5 8 5 16c0 2 .6 3.4 1.5 4.5C8 14 13 9 19 7c-5 3-9 8-10.5 13.5C9.6 21 10.8 21 12 21c8 0 8-11 8-17z" fill="#2ABFA3"/>
+    </svg>
+    MyFreelanceAI
+  </div>
+  <div class="navlinks">
+    <a href="#">Dashboard</a>
+    <a href="#">Work log</a>
+    <a href="#" class="active">Clients</a>
+    <a href="#">Invoices</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <div class="avatar">SM</div>
+</nav>
+
+<div class="page">
+
+  <!-- CLIENT HEADER -->
+  <div class="client-header">
+    <div class="client-avatar">BP</div>
+    <div class="client-name">
+      <h1>Bright Path Marketing</h1>
+      <p>Sarah Mitchell · Client since Mar 2025</p>
+      <span class="client-status"><span class="dot"></span>Active client</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        Log work
+      </button>
+      <button class="btn">
+        <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+        New invoice
+      </button>
+    </div>
+  </div>
+
+  <!-- STAT STRIP -->
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Billed this year</div>
+      <div class="value">£8,420</div>
+      <div class="sub">across 11 invoices</div>
+    </div>
+    <div class="stat">
+      <div class="label">Outstanding</div>
+      <div class="value orange">£1,150</div>
+      <div class="sub">2 unpaid invoices</div>
+    </div>
+    <div class="stat">
+      <div class="label">Hours this month</div>
+      <div class="value mint">26.5</div>
+      <div class="sub">≈ £1,192 unbilled</div>
+    </div>
+    <div class="stat">
+      <div class="label">Avg. payment time</div>
+      <div class="value">9 days</div>
+      <div class="sub">usually pays early</div>
+    </div>
+  </div>
+
+  <!-- AI SLIM BAR -->
+  <div class="ai-bar">
+    <div class="ai-bar-label">
+      <span class="badge"><span class="dot"></span>AI</span>
+      <span>Ask about Bright Path</span>
+    </div>
+    <div class="ai-bar-divider"></div>
+    <div class="chips-inline">
+      <div class="chip">Chase overdue invoice</div>
+      <div class="chip">Summarise this month</div>
+      <div class="chip">Draft next invoice</div>
+    </div>
+    <input type="text" placeholder="Or type your own question…">
+    <button class="send" aria-label="Send">
+      <svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+    </button>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="col">
+
+      <!-- CONTACT INFO -->
+      <div class="panel">
+        <h2>Contact details <a class="link" href="#">Edit</a></h2>
+        <div class="c-row">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>
+          <div><div class="k">Email</div><div class="v">sarah@brightpath.co.uk</div></div>
+        </div>
+        <div class="c-row">
+          <svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.7 3.4-2 1.6a16 16 0 0 0 6 6l1.6-2 3.4.7a2 2 0 0 1 1.7 2z"/></svg>
+          <div><div class="k">Phone</div><div class="v">07700 900123</div></div>
+        </div>
+        <div class="c-row">
+          <svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div><div class="k">Address</div><div class="v">14 Weaver Street, Manchester, M4 5JW</div></div>
+        </div>
+        <div class="c-row">
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+          <div><div class="k">VAT number</div><div class="v">GB 412 8765 33</div></div>
+        </div>
+      </div>
+
+      <!-- RATES -->
+      <div class="panel">
+        <h2>Rates <a class="link" href="#">Edit</a></h2>
+        <div class="rate-row">
+          <div><div class="rname">Standard hourly</div><div class="rnote">Default for logged work</div></div>
+          <div class="rval">£45/hr</div>
+        </div>
+        <div class="rate-row">
+          <div><div class="rname">Rush work</div><div class="rnote">Under 48 hours notice</div></div>
+          <div class="rval">£65/hr</div>
+        </div>
+        <div class="rate-row">
+          <div><div class="rname">Day rate</div><div class="rnote">On-site days</div></div>
+          <div class="rval">£340</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="col">
+
+      <!-- WORK LOG -->
+      <div class="panel">
+        <h2>Recent work <a class="link" href="#">View full log</a></h2>
+        <div class="wl-row">
+          <div class="wl-date"><div class="d">30</div><div class="m">Jun</div></div>
+          <div class="wl-body">
+            <div class="t">Landing page copy revisions</div>
+            <div class="s">Second round of edits after client feedback</div>
+          </div>
+          <div class="wl-hrs">3.5 hrs</div>
+        </div>
+        <div class="wl-row">
+          <div class="wl-date"><div class="d">26</div><div class="m">Jun</div></div>
+          <div class="wl-body">
+            <div class="t">Email campaign build</div>
+            <div class="s">July newsletter — drafted and scheduled</div>
+          </div>
+          <div class="wl-hrs">5 hrs</div>
+        </div>
+        <div class="wl-row">
+          <div class="wl-date"><div class="d">23</div><div class="m">Jun</div></div>
+          <div class="wl-body">
+            <div class="t">Strategy call + notes</div>
+            <div class="s">Quarterly planning with Sarah</div>
+          </div>
+          <div class="wl-hrs">1.5 hrs</div>
+        </div>
+        <div class="wl-row">
+          <div class="wl-date"><div class="d">18</div><div class="m">Jun</div></div>
+          <div class="wl-body">
+            <div class="t">Website audit report</div>
+            <div class="s">Full SEO and content audit delivered</div>
+          </div>
+          <div class="wl-hrs">6 hrs</div>
+        </div>
+      </div>
+
+      <!-- INVOICES -->
+      <div class="panel">
+        <h2>Invoices <a class="link" href="#">View all</a></h2>
+        <table>
+          <thead>
+            <tr><th>Invoice</th><th>Date</th><th>Status</th><th class="amount">Amount</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>INV-0142</strong><br><span class="muted">June work</span></td>
+              <td class="muted">28 Jun 2026</td>
+              <td><span class="pill sent">Sent</span></td>
+              <td class="amount">£690</td>
+            </tr>
+            <tr>
+              <td><strong>INV-0138</strong><br><span class="muted">Website audit</span></td>
+              <td class="muted">10 Jun 2026</td>
+              <td><span class="pill overdue">Overdue 5d</span></td>
+              <td class="amount">£460</td>
+            </tr>
+            <tr>
+              <td><strong>INV-0131</strong><br><span class="muted">May retainer</span></td>
+              <td class="muted">30 May 2026</td>
+              <td><span class="pill paid">Paid</span></td>
+              <td class="amount">£1,020</td>
+            </tr>
+            <tr>
+              <td><strong>INV-0124</strong><br><span class="muted">April retainer</span></td>
+              <td class="muted">30 Apr 2026</td>
+              <td><span class="pill paid">Paid</span></td>
+              <td class="amount">£980</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PAYMENT HISTORY -->
+      <div class="panel">
+        <h2>Payment history <a class="link" href="#">Export</a></h2>
+        <div class="pay-row">
+          <div class="pay-ic"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="pay-body">
+            <div class="t">INV-0131 paid in full</div>
+            <div class="s">4 Jun 2026 · Bank transfer · 5 days after sending</div>
+          </div>
+          <div class="pay-amt">£1,020</div>
+        </div>
+        <div class="pay-row">
+          <div class="pay-ic"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="pay-body">
+            <div class="t">INV-0124 paid in full</div>
+            <div class="s">9 May 2026 · Bank transfer · 9 days after sending</div>
+          </div>
+          <div class="pay-amt">£980</div>
+        </div>
+        <div class="pay-row">
+          <div class="pay-ic"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="pay-body">
+            <div class="t">INV-0117 paid in full</div>
+            <div class="s">12 Apr 2026 · Bank transfer · 12 days after sending</div>
+          </div>
+          <div class="pay-amt">£1,140</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottomnav">
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+    Dashboard
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Work log
+  </a>
+  <a class="bn-item active" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.5c2.8.4 5 2.7 5 5.5"/></svg>
+    Clients
+  </a>
+  <a class="bn-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+    Invoices
+  </a>
+</nav>
+
+</body>
+</html>
