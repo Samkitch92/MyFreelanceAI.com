@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#16283A;
+    --navy-mid:#1E3A52;
+    --mint:#3DC98B;
+    --mint-soft:#E8F8F1;
+    --ink:#16283A;
+    --ink-mid:#4A5568;
+    --ink-soft:#8896A5;
+    --bg:#F4EFE3;
+    --card:#FFFFFF;
+    --line:#E6DDD0;
+    --line-inner:#EDE7D9;
+    --red:#E05252;
+    --red-soft:#FEF0F0;
+    --amber:#E8913A;
+    --amber-soft:#FEF4EA;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:80px;}
+
+  /* NAV */
+  .topnav{display:flex;align-items:center;padding:0 40px;height:60px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:16px;color:var(--ink);text-decoration:none;letter-spacing:-0.3px;margin-right:32px;}
+  .leaf{width:22px;height:22px;flex:0 0 22px;}
+  .navlinks{display:flex;gap:1px;align-items:center;}
+  .navlinks a{text-decoration:none;color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:8px;}
+  .navlinks a:hover{color:var(--ink);background:var(--bg);}
+  .navlinks a.active{color:var(--mint);background:var(--mint-soft);font-weight:700;}
+  .nav-dropdown{position:relative;}
+  .nav-trigger{display:flex;align-items:center;gap:5px;color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;user-select:none;}
+  .nav-trigger:hover{color:var(--ink);background:var(--bg);}
+  .nav-trigger svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;}
+  .nav-trigger.active-parent{color:var(--mint);background:var(--mint-soft);}
+  .dropdown-menu{position:absolute;top:calc(100%+6px);left:0;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.08);min-width:150px;overflow:hidden;z-index:100;}
+  .dropdown-menu a{display:block;padding:10px 16px;font-size:13px;font-weight:600;text-decoration:none;color:var(--ink);}
+  .dropdown-menu a:hover{background:var(--bg);}
+  .dropdown-menu a.active{color:var(--mint);}
+  .dropdown-menu .divider{height:1px;background:var(--line);}
+  .nav-spacer{flex:1;}
+  .nav-right{display:flex;align-items:center;gap:10px;}
+  .avatar{width:34px;height:34px;border-radius:8px;background:var(--navy);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;}
+
+  /* BUTTONS */
+  .btn-primary{display:inline-flex;align-items:center;gap:7px;background:var(--mint);color:#fff;font-size:13px;font-weight:700;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;}
+  .btn-primary svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+  .btn-ghost{display:inline-flex;align-items:center;gap:7px;background:var(--card);color:var(--ink);font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid var(--line);cursor:pointer;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;}
+  .btn-ghost svg{width:14px;height:14px;stroke:var(--ink-mid);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .btn-danger{display:inline-flex;align-items:center;gap:7px;background:var(--red-soft);color:var(--red);font-size:13px;font-weight:700;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;}
+
+  /* PAGE */
+  .page{max-width:1100px;margin:0 auto;padding:32px 40px;}
+  .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
+  .page-header h1{font-size:22px;font-weight:800;letter-spacing:-0.4px;}
+  .page-header p{font-size:13px;color:var(--ink-soft);margin-top:3px;}
+  .header-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+
+  /* BREADCRUMB */
+  .breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft);margin-bottom:18px;}
+  .breadcrumb a{color:var(--ink-soft);text-decoration:none;font-weight:600;}
+  .breadcrumb a:hover{color:var(--ink);}
+  .breadcrumb svg{width:12px;height:12px;stroke:var(--ink-soft);fill:none;stroke-width:2;stroke-linecap:round;}
+  .breadcrumb span{font-weight:700;color:var(--ink);}
+
+  /* STATS */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;}
+  .stat .label{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.6px;display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+  .stat .label .dot{width:6px;height:6px;border-radius:50%;flex:0 0 6px;}
+  .stat .label .dot.mint{background:var(--mint);}
+  .stat .label .dot.amber{background:var(--amber);}
+  .stat .label .dot.navy{background:var(--navy);}
+  .stat .label .dot.red{background:var(--red);}
+  .stat .value{font-size:26px;font-weight:800;letter-spacing:-0.6px;color:var(--ink);}
+  .stat .value.mint{color:var(--mint);}
+  .stat .value.amber{color:var(--amber);}
+  .stat .value.red{color:var(--red);}
+  .stat .sub{font-size:12px;color:var(--ink-soft);margin-top:4px;}
+  .stat .sub.up{color:var(--mint);}
+
+  /* AI BAR */
+  .ai-bar{background:var(--card);border:1.5px solid var(--mint);border-radius:12px;padding:12px 16px;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+  .ai-badge{display:inline-flex;align-items:center;gap:6px;background:var(--mint);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;white-space:nowrap;flex:0 0 auto;}
+  .ai-pulse{width:6px;height:6px;border-radius:50%;background:#fff;animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%{opacity:1;}50%{opacity:0.4;}100%{opacity:1;}}
+  .ai-divider{width:1px;height:22px;background:var(--line);flex:0 0 1px;}
+  .ai-chips{display:flex;gap:6px;overflow:hidden;flex-wrap:nowrap;}
+  .ai-chip{font-size:12px;font-weight:600;color:var(--ink-mid);white-space:nowrap;background:var(--line-inner);border:1px solid var(--line);padding:5px 11px;border-radius:6px;cursor:pointer;}
+  .ai-chip:hover{border-color:var(--mint);color:var(--mint);}
+  .ai-bar input{flex:1;border:none;outline:none;font-size:13px;background:transparent;color:var(--ink);min-width:0;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;}
+  .ai-bar input::placeholder{color:var(--ink-soft);}
+  .ai-send{width:32px;height:32px;border-radius:8px;flex:0 0 32px;background:var(--navy);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .ai-send svg{width:14px;height:14px;stroke:var(--mint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* PANELS */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;}
+  .panel-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--line);}
+  .panel-header h2{font-size:13px;font-weight:800;color:var(--ink);}
+  .panel-header a{font-size:12px;font-weight:600;color:var(--mint);text-decoration:none;}
+  .panel-header a:hover{text-decoration:underline;}
+
+  /* PILLS */
+  .pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;display:inline-block;white-space:nowrap;}
+  .pill.paid{background:var(--mint-soft);color:#1A7A50;}
+  .pill.sent{background:var(--amber-soft);color:#A8621A;}
+  .pill.overdue{background:var(--red-soft);color:#B03030;}
+  .pill.draft{background:#F0ECF8;color:#6B42B8;}
+  .pill.expired{background:#F0EDE8;color:var(--ink-soft);}
+  .pill.accepted{background:var(--mint-soft);color:#1A7A50;}
+  .pill.declined{background:var(--red-soft);color:#B03030;}
+  .pill.pending{background:var(--amber-soft);color:#A8621A;}
+  .pill.active{background:var(--mint-soft);color:#1A7A50;}
+  .pill.inactive{background:#F0EDE8;color:var(--ink-soft);}
+
+  /* TABLES */
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.5px;padding:0 8px 10px 8px;}
+  td{padding:11px 8px;border-top:1px solid var(--line);vertical-align:middle;}
+  th.r,td.r{text-align:right;}
+  td.r{font-weight:700;}
+  .muted{color:var(--ink-soft);}
+
+  /* ROW BUTTONS */
+  .row-btn{font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;border:1px solid var(--line);background:var(--card);cursor:pointer;color:var(--ink);font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;}
+  .row-btn.primary{background:var(--mint);color:#fff;border-color:var(--mint);}
+  .row-btn.amber{background:var(--amber-soft);color:#A8621A;border-color:var(--amber-soft);}
+  .row-actions{display:flex;gap:6px;justify-content:flex-end;}
+
+  /* ACTION ICON GRID */
+  .actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .action-btn{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;text-decoration:none;color:var(--ink);transition:border-color 0.15s;}
+  .action-btn:hover{border-color:var(--mint);}
+  .action-ic{width:30px;height:30px;border-radius:8px;flex:0 0 30px;display:flex;align-items:center;justify-content:center;}
+  .action-ic.mint{background:var(--mint-soft);}
+  .action-ic.navy{background:var(--navy);}
+  .action-ic svg{width:14px;height:14px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .action-ic.mint svg{stroke:var(--mint);}
+  .action-ic.navy svg{stroke:#fff;}
+  .action-label{font-size:12px;font-weight:700;}
+
+  /* SUMMARY ROWS */
+  .sum-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);}
+  .sum-row:last-child{border-bottom:none;}
+  .sum-row .k{font-size:12px;color:var(--ink-soft);}
+  .sum-row .v{font-size:13px;font-weight:700;color:var(--ink);}
+  .sum-row .v.mint{color:var(--mint);}
+  .sum-row .v.navy{color:var(--navy);}
+  .sum-row .v.amber{color:var(--amber);}
+
+  /* FILTER BAR */
+  .filter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .filter-tabs{display:flex;gap:3px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:4px;}
+  .filter-tabs button{border:none;background:none;cursor:pointer;font-size:12px;font-weight:600;color:var(--ink-soft);padding:6px 13px;border-radius:7px;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;}
+  .filter-tabs button.active{background:var(--navy);color:#fff;}
+  .filter-spacer{flex:1;}
+  .search-box{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 13px;}
+  .search-box svg{width:13px;height:13px;stroke:var(--ink-soft);fill:none;stroke-width:2;stroke-linecap:round;flex:0 0 13px;}
+  .search-box input{border:none;outline:none;font-size:13px;background:transparent;width:180px;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:var(--ink);}
+  .filter-select{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 13px;font-size:13px;font-weight:600;color:var(--ink);outline:none;cursor:pointer;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;}
+
+  /* TOGGLE */
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);}
+  .toggle-row:last-child{border-bottom:none;}
+  .toggle-body .t{font-size:14px;font-weight:700;}
+  .toggle-body .s{font-size:12px;color:var(--ink-soft);margin-top:3px;}
+  .toggle{position:relative;width:44px;height:26px;flex:0 0 44px;}
+  .toggle input{opacity:0;width:0;height:0;}
+  .toggle-track{position:absolute;inset:0;background:var(--line);border-radius:99px;cursor:pointer;transition:background 0.2s;}
+  .toggle input:checked + .toggle-track{background:var(--mint);}
+  .toggle-track::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.15);}
+  .toggle input:checked + .toggle-track::after{transform:translateX(18px);}
+
+  /* FORM */
+  .form-row{margin-bottom:16px;}
+  .form-row label{display:block;font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+  .form-row input,.form-row textarea,.form-row select{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 13px;font-size:13px;background:var(--bg);color:var(--ink);outline:none;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;}
+  .form-row textarea{resize:vertical;min-height:80px;line-height:1.6;}
+  .form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:var(--mint);}
+  .form-hint{font-size:11px;color:var(--ink-soft);margin-top:4px;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
+
+  /* BOTTOM NAV */
+  .bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--card);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));justify-content:space-around;}
+  .bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:var(--ink-soft);font-size:10px;font-weight:700;padding:4px 10px;border-radius:8px;}
+  .bn-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .bn-item.active{color:var(--mint);}
+
+  @media(max-width:860px){
+    .topnav .navlinks,.nav-right .btn-ghost{display:none;}
+    .bottomnav{display:flex;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .page{padding:20px 16px;}
+    .ai-chips{display:none;}
+    .search-box input{width:120px;}
+  }
+
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="brand" href="#"><svg class="leaf" viewBox="0 0 24 24" fill="none"><path d="M20 4C12 4 5 8 5 16c0 2 .6 3.4 1.5 4.5C8 14 13 9 19 7c-5 3-9 8-10.5 13.5C9.6 21 10.8 21 12 21c8 0 8-11 8-17z" fill="#3DC98B"/></svg>MyFreelanceAI</a>
+  <div class="navlinks">
+    <a href="#" class="">Dashboard</a>
+    <a href="#" class="">Work log</a>
+    <a href="#" class="">Clients</a>
+    <div class="nav-dropdown">
+      <div class="nav-trigger active-parent">Docs <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="dropdown-menu">
+        <a href="#" class="">Quotes</a>
+        <div class="divider"></div>
+        <a href="#" class="">Invoices</a>
+      </div>
+    </div>
+    <a href="#" class="">Accounts</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <div class="nav-right">
+    <button class="btn-ghost"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Log work</button>
+    <button class="btn-primary"><svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>New invoice</button>
+    <div class="avatar">SM</div>
+  </div>
+</nav>
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1>Quotes</h1>
+      <p>Send, track and chase quotes — see what's pending, accepted or about to expire.</p>
+    </div>
+    <div class="header-actions"><button class="btn-primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New quote</button></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="label"><span class="dot navy"></span>Total quoted</div><div class="value">£24,800</div><div class="sub">this tax year</div></div>
+    <div class="stat"><div class="label"><span class="dot mint"></span>Accepted</div><div class="value mint">£18,350</div><div class="sub">74% conversion rate</div></div>
+    <div class="stat"><div class="label"><span class="dot amber"></span>Pending</div><div class="value amber">£4,200</div><div class="sub">3 awaiting response</div></div>
+    <div class="stat"><div class="label"><span class="dot red"></span>Declined</div><div class="value red">£2,250</div><div class="sub">2 this year</div></div>
+  </div>
+  <div class="ai-bar">
+    <span class="ai-badge"><span class="ai-pulse"></span>AI</span>
+    <span style="font-size:13px;font-weight:700;white-space:nowrap;">Ask about your quotes</span>
+    <div class="ai-divider"></div>
+    <div class="ai-chips"><div class="ai-chip">Chase pending quotes</div><div class="ai-chip">Which quotes expire soon?</div><div class="ai-chip">Draft a new quote</div></div>
+    <input type="text" placeholder="Or type your own question…">
+    <button class="ai-send"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
+  </div>
+  <div class="filter-bar">
+    <div class="filter-tabs"><button class="active">All</button><button>Pending</button><button>Accepted</button><button>Declined</button><button>Draft</button></div>
+    <div class="filter-spacer"></div>
+    <div class="search-box"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" placeholder="Search quotes…"></div>
+    <select class="filter-select"><option>All clients</option><option>Bright Path Marketing</option><option>Nova Studio</option><option>Thornfield Legal</option></select>
+  </div>
+  <div class="panel">
+    <table>
+      <thead><tr><th>Quote</th><th class="hm">Client</th><th class="hm">Sent</th><th>Status</th><th class="hm">Expires</th><th class="r">Value</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><strong>QUO-0031</strong><br><span class="muted" style="font-size:11px;">Brand refresh package</span></td><td class="hm muted">Bright Path Marketing</td><td class="hm muted">24 Jun 2026</td><td><span class="pill pending">Pending</span></td><td class="hm"><span class="expiry warn">Expires in 3 days</span></td><td class="r">£2,400</td><td><div class="row-actions"><button class="row-btn">View</button><button class="row-btn primary">Chase</button></div></td></tr>
+        <tr><td><strong>QUO-0030</strong><br><span class="muted" style="font-size:11px;">Social media management</span></td><td class="hm muted">Nova Studio</td><td class="hm muted">20 Jun 2026</td><td><span class="pill pending">Pending</span></td><td class="hm"><span class="expiry warn">Expires in 7 days</span></td><td class="r">£1,200</td><td><div class="row-actions"><button class="row-btn">View</button><button class="row-btn primary">Chase</button></div></td></tr>
+        <tr><td><strong>QUO-0029</strong><br><span class="muted" style="font-size:11px;">Quarterly content retainer</span></td><td class="hm muted">Thornfield Legal</td><td class="hm muted">15 Jun 2026</td><td><span class="pill pending">Pending</span></td><td class="hm"><span class="expiry ok">Expires in 12 days</span></td><td class="r">£600</td><td><div class="row-actions"><button class="row-btn">View</button><button class="row-btn primary">Chase</button></div></td></tr>
+        <tr><td><strong>QUO-0032</strong><br><span class="muted" style="font-size:11px;">Website copy overhaul</span></td><td class="hm muted">Bright Path Marketing</td><td class="hm muted">—</td><td><span class="pill draft">Draft</span></td><td class="hm"><span class="expiry ok">Not sent yet</span></td><td class="r">£1,800</td><td><div class="row-actions"><button class="row-btn">Edit</button><button class="row-btn primary">Send</button></div></td></tr>
+        <tr><td><strong>QUO-0028</strong><br><span class="muted" style="font-size:11px;">Email campaign — Q3</span></td><td class="hm muted">Bright Path Marketing</td><td class="hm muted">2 Jun 2026</td><td><span class="pill accepted">Accepted</span></td><td class="hm"><span class="expiry ok">Signed 8 Jun</span></td><td class="r">£3,200</td><td><div class="row-actions"><button class="row-btn">View</button><button class="row-btn amber">Invoice</button></div></td></tr>
+        <tr><td><strong>QUO-0027</strong><br><span class="muted" style="font-size:11px;">SEO audit &amp; report</span></td><td class="hm muted">Nova Studio</td><td class="hm muted">18 May 2026</td><td><span class="pill accepted">Accepted</span></td><td class="hm"><span class="expiry ok">Signed 22 May</span></td><td class="r">£950</td><td><div class="row-actions"><button class="row-btn">View</button><button class="row-btn amber">Invoice</button></div></td></tr>
+        <tr><td><strong>QUO-0026</strong><br><span class="muted" style="font-size:11px;">Paid ads management</span></td><td class="hm muted">Nova Studio</td><td class="hm muted">8 May 2026</td><td><span class="pill declined">Declined</span></td><td class="hm"><span class="expiry ok muted">—</span></td><td class="r">£1,400</td><td><div class="row-actions"><button class="row-btn">View</button><button class="row-btn">Duplicate</button></div></td></tr>
+        <tr><td><strong>QUO-0024</strong><br><span class="muted" style="font-size:11px;">Brand guidelines doc</span></td><td class="hm muted">Bright Path Marketing</td><td class="hm muted">10 Apr 2026</td><td><span class="pill expired">Expired</span></td><td class="hm"><span class="expiry ok muted">Expired 10 May</span></td><td class="r">£850</td><td><div class="row-actions"><button class="row-btn">Duplicate</button></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<nav class="bottomnav">
+  <a class="bn-item " href="#"><svg viewBox="0 0 24 24"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>Dashboard</a>
+  <a class="bn-item " href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Work log</a>
+  <a class="bn-item " href="#"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>Clients</a>
+  <a class="bn-item active" href="#"><svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>Docs</a>
+  <a class="bn-item " href="#"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Accounts</a>
+</nav>
+</body>
+</html>
