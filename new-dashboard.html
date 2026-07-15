@@ -266,6 +266,10 @@
   .bn-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
   .bn-item.active{color:var(--mint);}
 
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.5px;padding:0 8px 10px 8px;}
+  td{padding:11px 8px;border-top:1px solid var(--line);vertical-align:middle;}
+  th.r,td.r{text-align:right;} td.r{font-weight:700;} .muted{color:var(--ink-soft);}
   @media(max-width:860px){
     .topnav .navlinks{display:none;}
     .bottomnav{display:flex;}
@@ -365,7 +369,7 @@
 
       <div class="panel">
         <div class="panel-header">
-          <h2>Recent work</h2>
+          <h2>Recent work log</h2>
           <a href="#">View full log</a>
         </div>
         <div class="wl-row">
@@ -399,30 +403,42 @@
           <h2>Invoices</h2>
           <a href="#">View all</a>
         </div>
-        <div class="inv-row">
-          <div class="inv-num">INV-0142</div>
-          <div class="inv-client">Bright Path Marketing</div>
-          <div class="inv-amt">£690</div>
-          <span class="pill sent">Sent</span>
-        </div>
-        <div class="inv-row">
-          <div class="inv-num">INV-0138</div>
-          <div class="inv-client">Bright Path Marketing</div>
-          <div class="inv-amt">£460</div>
-          <span class="pill overdue">Overdue</span>
-        </div>
-        <div class="inv-row">
-          <div class="inv-num">INV-0131</div>
-          <div class="inv-client">Nova Studio</div>
-          <div class="inv-amt">£1,020</div>
-          <span class="pill paid">Paid</span>
-        </div>
-        <div class="inv-row">
-          <div class="inv-num">INV-0124</div>
-          <div class="inv-client">Thornfield Legal</div>
-          <div class="inv-amt">£980</div>
-          <span class="pill paid">Paid</span>
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Invoice</th>
+              <th>Client</th>
+              <th>Status</th>
+              <th class="r">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>INV-0142</strong></td>
+              <td class="muted">Bright Path Marketing</td>
+              <td><span class="pill sent">Sent</span></td>
+              <td class="r">£690</td>
+            </tr>
+            <tr>
+              <td><strong>INV-0138</strong></td>
+              <td class="muted">Bright Path Marketing</td>
+              <td><span class="pill overdue">Overdue</span></td>
+              <td class="r">£460</td>
+            </tr>
+            <tr>
+              <td><strong>INV-0131</strong></td>
+              <td class="muted">Nova Studio</td>
+              <td><span class="pill paid">Paid</span></td>
+              <td class="r">£1,020</td>
+            </tr>
+            <tr>
+              <td><strong>INV-0124</strong></td>
+              <td class="muted">Thornfield Legal</td>
+              <td><span class="pill paid">Paid</span></td>
+              <td class="r">£980</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
     </div>
